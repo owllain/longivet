@@ -105,41 +105,67 @@ export function AppointmentLookup() {
   const codigo = `LV-${cuerpo}`;
   const codigoValido = /^[A-Z2-9]{6}$/.test(cuerpo);
 
-  const consultar = useCallback(
-    async (codigoAConsultar: string) => {
-      if (!/^LV-[A-Z2-9]{6}$/.test(codigoAConsultar)) {
-        setEstado({ fase: "no-encontrada", mensaje: "Escribe tu código completo con el formato LV-XXXXXX." });
-        return;
-      }
+  const consultar = useCallback((codigoAConsultar: string) => {
+    if (!/^LV-[A-Z2-9]{6}$/.test(codigoAConsultar)) {
+      setEstado({ fase: "no-encontrada", mensaje: "Escribe tu código completo con el formato LV-XXXXXX." });
+      return;
+    }
 
-      setConsultando(true);
-      setErrorCancelar(null);
-      try {
-        const res = await fetch(`/api/appointments/${encodeURIComponent(codigoAConsultar)}`, { cache: "no-store" });
-        const json = (await res.json().catch(() => null)) as
-          | { ok?: boolean; appointment?: CitaPublica; error?: string }
-          | null;
+    setConsultando(true);
+    setErrorCancelar(null);
 
-        if (res.ok && json?.ok && json.appointment) {
-          setEstado({ fase: "encontrada", cita: json.appointment });
-        } else {
-          setEstado({ fase: "no-encontrada", mensaje: json?.error ?? "No encontramos una cita con ese código." });
+    try {
+      const guardada = localStorage.getItem("longivet_last_appointment");
+      if (guardada) {
+        const parsed = JSON.parse(guardada) as {
+          code: string;
+          petName: string;
+          species: string;
+          service: string;
+          preferredVet?: string | null;
+          date: string;
+          timeSlot: string;
+          tutorName: string;
+          status?: string;
+          email?: string;
+          phone?: string;
+        };
+
+        if (parsed && parsed.code === codigoAConsultar) {
+          setEstado({
+            fase: "encontrada",
+            cita: {
+              code: parsed.code,
+              petName: parsed.petName,
+              species: parsed.species,
+              service: parsed.service,
+              preferredVet: parsed.preferredVet ?? null,
+              date: parsed.date,
+              timeSlot: parsed.timeSlot,
+              tutorName: parsed.tutorName,
+              status: parsed.status || "CONFIRMADA",
+              emailMasked: parsed.email ? parsed.email.replace(/(.{2})(.*)(@.*)/, "$1***$3") : "tutor@***",
+              phoneMasked: parsed.phone ? `${parsed.phone.slice(0, 4)}****` : "****",
+            },
+          });
+          setConsultando(false);
+          return;
         }
-      } catch {
-        setEstado({
-          fase: "no-encontrada",
-          mensaje: "Tuvimos un problema de conexión. Verifica tu internet e intenta de nuevo.",
-        });
-      } finally {
-        setConsultando(false);
       }
-    },
-    [],
-  );
+    } catch {
+      // Ignorar error de storage
+    }
+
+    setEstado({
+      fase: "no-encontrada",
+      mensaje: "No encontramos esta cita guardada en tu navegador actual.",
+    });
+    setConsultando(false);
+  }, []);
 
   const enviarConsulta = (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault();
-    void consultar(codigo);
+    consultar(codigo);
   };
 
   const cancelarCita = async () => {
@@ -147,27 +173,36 @@ export function AppointmentLookup() {
     setCancelando(true);
     setErrorCancelar(null);
     try {
-      const res = await fetch(`/api/appointments/${encodeURIComponent(estado.cita.code)}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "cancelar" }),
-      });
-      const json = (await res.json().catch(() => null)) as
-        | { ok?: boolean; appointment?: CitaPublica; error?: string }
-        | null;
-
-      if (res.ok && json?.ok && json.appointment) {
-        setEstado({ fase: "encontrada", cita: json.appointment });
-        toast.success("Tu cita fue cancelada. La franja queda libre para otros pacientes.", {
-          description: "Si te arrepientes, agenda de nuevo cuando quieras: no hay penalidad.",
-        });
-      } else {
-        const mensaje = json?.error ?? "No pudimos cancelar tu cita. Llámanos y lo hacemos por teléfono.";
-        setErrorCancelar(mensaje);
-        toast.error(mensaje);
+      try {
+        const guardada = localStorage.getItem("longivet_last_appointment");
+        if (guardada) {
+          const parsed = JSON.parse(guardada);
+          if (parsed && parsed.code === estado.cita.code) {
+            parsed.status = "CANCELADA";
+            localStorage.setItem("longivet_last_appointment", JSON.stringify(parsed));
+          }
+        }
+      } catch {
+        // Ignorar
       }
+
+      setEstado({
+        fase: "encontrada",
+        cita: { ...estado.cita, status: "CANCELADA" },
+      });
+
+      // Notificar por WhatsApp
+      const mensaje = `Hola LONGIVET, deseo notificar la cancelación de mi cita ${estado.cita.code} para ${estado.cita.petName} agendada el ${formatFechaLarga(estado.cita.date)} a las ${estado.cita.timeSlot} h.`;
+      const url = `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(mensaje)}`;
+      if (typeof window !== "undefined") {
+        window.open(url, "_blank", "noopener,noreferrer");
+      }
+
+      toast.success("Tu cita fue marcada como cancelada y se preparó la notificación a WhatsApp.", {
+        description: "El equipo de LONGIVET liberará el espacio en la clínica.",
+      });
     } catch {
-      const mensaje = "Tuvimos un problema de conexión al cancelar. Intenta de nuevo o llámanos.";
+      const mensaje = "No pudimos procesar la cancelación. Puedes escribirnos directo a WhatsApp.";
       setErrorCancelar(mensaje);
       toast.error(mensaje);
     } finally {
@@ -260,12 +295,14 @@ export function AppointmentLookup() {
               <span>
                 {estado.mensaje}{" "}
                 <a
-                  href={site.whatsappHref}
+                  href={`https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(
+                    `Hola LONGIVET, quisiera consultar mi cita con código ${codigo} para mi mascota.`,
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold underline underline-offset-2"
+                  className="font-bold underline underline-offset-2 hover:text-brand-teal"
                 >
-                  Escríbenos por WhatsApp
+                  Consultar ${codigo} por WhatsApp
                   <span className="sr-only"> (abre en una pestaña nueva)</span>
                 </a>{" "}
                 y te ayudamos a encontrarla.

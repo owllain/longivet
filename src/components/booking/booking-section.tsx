@@ -2,8 +2,8 @@
 
 /* ─────────────────────────────────────────────────────────────
    LONGIVET · Sección «Agendar cita»
-   Asistente multipaso (Ley de Miller: 4 pasos) conectado a la
-   API real (/api/availability y /api/appointments) con Prisma.
+   Asistente multipaso (Ley de Miller: 4 pasos) con flujo
+   Database-less y WhatsApp-First.
    ───────────────────────────────────────────────────────────── */
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
@@ -40,6 +40,8 @@ import {
   afternoonSlots,
   EVENTO_PRESELECCION_SERVICIO,
   formatFechaLarga,
+  generarCodigo,
+  generarMensajeWhatsApp,
   morningSlots,
   services,
   vets,
@@ -363,19 +365,14 @@ export default function BookingSection() {
     return () => clearTimeout(temporizador);
   }, [servicioDestacado]);
 
-  const consultarDisponibilidad = useCallback(async (fecha: string) => {
+  const consultarDisponibilidad = useCallback((fecha: string) => {
     setCargandoDispo(true);
     setErrorDispo(false);
     try {
-      const res = await fetch(`/api/availability?date=${encodeURIComponent(fecha)}`, { cache: "no-store" });
-      const datos = (await res.json().catch(() => null)) as {
-        ok?: boolean;
-        closed?: boolean;
-        taken?: string[];
-        error?: string;
-      } | null;
-      if (!res.ok || !datos?.ok) throw new Error(datos?.error ?? "Error de disponibilidad");
-      setDisponibilidad({ closed: Boolean(datos.closed), taken: Array.isArray(datos.taken) ? datos.taken : [] });
+      // Domingo cerrado. Se parsea al mediodía UTC para evitar desfase de zona horaria.
+      const diaSemana = new Date(`${fecha}T12:00:00Z`).getUTCDay();
+      const esDomingo = diaSemana === 0;
+      setDisponibilidad({ closed: esDomingo, taken: [] });
     } catch {
       setDisponibilidad(null);
       setErrorDispo(true);
@@ -458,10 +455,12 @@ export default function BookingSection() {
     setEnviando(true);
 
     try {
-      const payload: AppointmentInput = {
+      const code = generarCodigo();
+      const citaCompleta = {
+        code,
         petName: form.petName.trim(),
         species: form.species as Especie,
-        breed: form.breed.trim(),
+        breed: form.breed.trim() || null,
         ageYears: form.ageYears,
         service: form.service,
         preferredVet: form.preferredVet,
@@ -470,47 +469,35 @@ export default function BookingSection() {
         tutorName: form.tutorName.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
-        notes: form.notes.trim(),
-        consent: true,
+        notes: form.notes.trim() || null,
       };
 
-      const res = await fetch("/api/appointments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      // Guardar localmente en el navegador para que el tutor pueda consultarla en el lookup
+      try {
+        localStorage.setItem("longivet_last_appointment", JSON.stringify(citaCompleta));
+      } catch {
+        // Ignorar si storage está deshabilitado
+      }
+
+      setConfirmacion({
+        code,
+        date: citaCompleta.date,
+        timeSlot: citaCompleta.timeSlot,
+        service: citaCompleta.service,
+        petName: citaCompleta.petName,
+        tutorName: citaCompleta.tutorName,
       });
-      const json = (await res.json().catch(() => null)) as {
-        ok?: boolean;
-        code?: string;
-        error?: string;
-        fieldErrors?: Record<string, string>;
-        appointment?: { date: string; timeSlot: string; service: string; petName: string; tutorName: string };
-      } | null;
 
-      if (res.status === 409) {
-        // La franja se ocupó mientras agendábamos: volver al paso 3 y refrescar.
-        toast.error(json?.error ?? "Lo sentimos, esa franja acaba de ser reservada. Elige otro horario.");
-        setForm((prev) => ({ ...prev, timeSlot: "" }));
-        setErrores((prev) => {
-          const siguientes = { ...prev };
-          delete siguientes.timeSlot;
-          return siguientes;
-        });
-        setPaso(3);
-        if (form.date) void consultarDisponibilidad(form.date);
-        return;
+      // Abrir WhatsApp automáticamente con todos los datos formateados
+      const textoWhatsApp = generarMensajeWhatsApp(citaCompleta);
+      const urlWhatsApp = `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(textoWhatsApp)}`;
+      if (typeof window !== "undefined") {
+        window.open(urlWhatsApp, "_blank", "noopener,noreferrer");
       }
 
-      if (!res.ok || !json?.ok || !json.code || !json.appointment) {
-        if (json?.fieldErrors) setErrores(json.fieldErrors);
-        toast.error(json?.error ?? "No pudimos registrar tu reserva. Revisa los datos e intenta de nuevo.");
-        return;
-      }
-
-      setConfirmacion({ code: json.code, ...json.appointment });
-      toast.success("¡Reserva confirmada! Te esperamos.");
+      toast.success("¡Reserva preparada! Abriendo WhatsApp para confirmar con la clínica...");
     } catch {
-      toast.error("Tuvimos un problema de conexión. Verifica tu internet e intenta de nuevo.");
+      toast.error("Ocurrió un error al preparar tu reserva. Intenta de nuevo.");
     } finally {
       setEnviando(false);
     }
@@ -565,12 +552,24 @@ export default function BookingSection() {
   const tituloPasoActual = PASOS[paso - 1]?.titulo ?? "";
   const pasoActual = confirmacion ? PASOS.length : paso;
 
-  /* Enlace de WhatsApp con confirmación prellenada (solo tras confirmar). */
+  /* Enlace de WhatsApp con confirmación estructurada (solo tras confirmar). */
   const waConfirmHref = confirmacion
     ? `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(
-        `Hola LONGIVET, confirmo mi cita ${confirmacion.code} para ${confirmacion.petName} el ${formatFechaLarga(
-          confirmacion.date,
-        )} a las ${confirmacion.timeSlot}.`,
+        generarMensajeWhatsApp({
+          code: confirmacion.code,
+          petName: confirmacion.petName,
+          species: form.species || "perro",
+          breed: form.breed || null,
+          ageYears: form.ageYears,
+          service: confirmacion.service,
+          preferredVet: form.preferredVet,
+          date: confirmacion.date,
+          timeSlot: confirmacion.timeSlot,
+          tutorName: confirmacion.tutorName,
+          email: form.email,
+          phone: form.phone,
+          notes: form.notes || null,
+        }),
       )}`
     : "#";
 

@@ -167,11 +167,64 @@ const CODIGO_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789";
  * durante el render del cliente.
  */
 export function generarCodigo(): string {
-  const bytes = new Uint8Array(6);
-  crypto.getRandomValues(bytes);
-  let codigo = "";
-  for (const byte of bytes) {
-    codigo += CODIGO_CHARS.charAt(byte % CODIGO_CHARS.length);
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    const bytes = new Uint8Array(6);
+    crypto.getRandomValues(bytes);
+    let codigo = "";
+    for (const byte of bytes) {
+      codigo += CODIGO_CHARS.charAt(byte % CODIGO_CHARS.length);
+    }
+    return `LV-${codigo}`;
   }
-  return `LV-${codigo}`;
+  // Fallback seguro si crypto no estuviese disponible
+  let fallback = "";
+  for (let i = 0; i < 6; i++) {
+    fallback += CODIGO_CHARS.charAt(Math.floor(Math.random() * CODIGO_CHARS.length));
+  }
+  return `LV-${fallback}`;
+}
+
+/**
+ * Genera el texto formateado para enviar la solicitud de reserva por WhatsApp.
+ */
+export function generarMensajeWhatsApp(cita: {
+  code: string;
+  petName: string;
+  species: string;
+  breed?: string | null;
+  ageYears?: number | null;
+  service: string;
+  preferredVet?: string | null;
+  date: string;
+  timeSlot: string;
+  tutorName: string;
+  email: string;
+  phone: string;
+  notes?: string | null;
+}): string {
+  const nombreServicio = services.find((s) => s.id === cita.service)?.label ?? cita.service;
+  const nombreVet = vets.find((v) => v.id === cita.preferredVet)?.label ?? "Sin preferencia";
+  const especieTexto = cita.species === "perro" ? "Perro" : cita.species === "gato" ? "Gato" : "Otra";
+  const edadTexto = cita.ageYears !== null && cita.ageYears !== undefined ? ` (${cita.ageYears} años)` : "";
+  const razaTexto = cita.breed ? ` - ${cita.breed}` : "";
+
+  return [
+    `🐾 *SOLICITUD DE CITA · LONGIVET*`,
+    `Código: *${cita.code}*`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `🐶 *Mascota:* ${cita.petName} (${especieTexto}${razaTexto}${edadTexto})`,
+    `🩺 *Servicio:* ${nombreServicio}`,
+    `👩‍⚕️ *Especialista:* ${nombreVet}`,
+    `📅 *Fecha solicitada:* ${formatFechaLarga(cita.date)}`,
+    `⏰ *Horario:* ${cita.timeSlot} h`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `👤 *Tutor:* ${cita.tutorName}`,
+    `📱 *Teléfono:* ${cita.phone}`,
+    `✉️ *Correo:* ${cita.email}`,
+    cita.notes ? `📝 *Notas:* ${cita.notes}` : null,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `¡Hola! He agendado esta cita desde el sitio web y me gustaría confirmarla. ¡Gracias!`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 }

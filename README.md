@@ -1,59 +1,40 @@
 # LONGIVET · Servicios Veterinarios (Especialidad en Geriatría)
 
-Sitio web oficial y sistema de reservas de citas para **LONGIVET - Hospital & Servicios Veterinarios**.
+Sitio web oficial y sistema de reservas WhatsApp-First para **LONGIVET - Hospital & Servicios Veterinarios**.
 
 ## 🛠️ Stack Tecnológico
 
 - **Framework**: [Next.js 16](https://nextjs.org/) (App Router) + React 19
 - **Lenguaje**: TypeScript
 - **Estilos**: Tailwind CSS 4 + Radix UI + shadcn/ui
-- **Base de Datos & ORM**: PostgreSQL + [Prisma ORM](https://www.prisma.io/)
+- **Arquitectura**: **Database-less & WhatsApp-First** (cero dependencias externas, cero costos de base de datos)
 - **Animaciones**: Framer Motion
 - **Iconografía**: Lucide React
 - **Validaciones**: Zod + React Hook Form
 
-## 🚀 Despliegue en Vercel
+## 🚀 Despliegue en Vercel (1 Clic)
 
-1. **Subir a GitHub**:
-   El proyecto ya está configurado para desplegarse automáticamente desde tu repositorio de GitHub.
+1. Conecta tu cuenta de Vercel con el repositorio: `https://github.com/owllain/longivet`.
+2. Haz clic en **Deploy**.
+3. **¡Listo!** No necesitas configurar bases de datos, contraseñas ni variables de entorno. Vercel compila el proyecto directamente en segundos.
 
-2. **Crear Base de Datos PostgreSQL gratuita**:
-   Puedes crear una base de datos PostgreSQL en cuestión de segundos en:
-   - [Neon](https://neon.tech/) (Recomendado, 1-click integration con Vercel)
-   - [Supabase](https://supabase.com/)
+## 📱 Flujo de Citas (WhatsApp-First)
 
-3. **Configurar en Vercel**:
-   - Conecta tu repositorio en Vercel.
-   - En **Settings > Environment Variables**, agrega:
-     ```env
-     DATABASE_URL="tu_cadena_de_conexion_postgresql"
-     ```
-   - ¡Listo! Vercel ejecutará automáticamente `prisma generate && next build`.
-
-4. **Sincronizar las tablas en producción**:
-   Una vez configurada la variable `DATABASE_URL`, ejecuta desde tu terminal para crear las tablas en la base de datos:
-   ```bash
-   npx prisma db push
-   ```
+1. El tutor completa los 4 pasos del asistente (Mascota → Servicio → Horario → Datos).
+2. Se genera un código único de confirmación (ej. `LV-DRKVOC`) y se guarda en el navegador del cliente.
+3. Se arma automáticamente un mensaje estructurado con todos los datos clínicos y de contacto.
+4. Se abre **WhatsApp** con el mensaje listo para enviar al equipo de LONGIVET.
+5. La clínica confirma la cita y coordina detalles directamente con el tutor.
+6. El tutor puede consultar o gestionar la cancelación de su cita directamente desde el sitio con su código o por WhatsApp.
 
 ## 💻 Desarrollo Local
 
-1. Clona el repositorio e instala las dependencias:
+1. Instala las dependencias:
    ```bash
    npm install
    ```
 
-2. Copia el archivo `.env.example` a `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-
-3. Genera el cliente de Prisma:
-   ```bash
-   npm run db:generate
-   ```
-
-4. Inicia el servidor de desarrollo:
+2. Inicia el servidor de desarrollo:
    ```bash
    npm run dev
    ```
