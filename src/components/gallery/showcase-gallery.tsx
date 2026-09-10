@@ -99,6 +99,9 @@ export default function ShowcaseGallery() {
   );
   const fillRef = useRef<HTMLSpanElement | null>(null);
   const thumbRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const thumbsContainerRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [inView, setInView] = useState(true);
 
   const progress = useAnimationControls();
 
@@ -109,7 +112,22 @@ export default function ShowcaseGallery() {
     !pointerPaused &&
     !focusPaused &&
     !pageHidden &&
-    !lightboxOpen;
+    !lightboxOpen &&
+    inView;
+
+  /* ── Pausar autoplay si la sección no está en pantalla ── */
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   /* ── Visibilidad de pestaña ── */
   useEffect(() => {
@@ -181,13 +199,23 @@ export default function ShowcaseGallery() {
     });
   }, []);
 
-  /* ── Miniatura activa siempre a la vista ── */
+  /* ── Miniatura activa siempre a la vista (scroll horizontal en su contenedor, NUNCA en la ventana) ── */
   useEffect(() => {
+    const container = thumbsContainerRef.current;
     const thumb = thumbRefs.current[index];
-    thumb?.scrollIntoView({
+    if (!container || !thumb) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const thumbRect = thumb.getBoundingClientRect();
+    const offset =
+      thumbRect.left -
+      containerRect.left -
+      containerRect.width / 2 +
+      thumbRect.width / 2;
+
+    container.scrollBy({
+      left: offset,
       behavior: reducedMotion ? "auto" : "smooth",
-      block: "nearest",
-      inline: "center",
     });
   }, [index, reducedMotion]);
 
@@ -310,6 +338,7 @@ export default function ShowcaseGallery() {
 
   return (
     <section
+      ref={sectionRef}
       id="galeria"
       aria-labelledby="titulo-galeria"
       className="bg-brand-sand py-20 sm:py-24 md:py-28 dark:bg-card"
@@ -516,7 +545,10 @@ export default function ShowcaseGallery() {
 
         {/* ── Miniaturas (scrollable, snap, siempre accesibles) ── */}
         <div className="mt-4 sm:mt-5">
-          <div className="scrollbar-fina flex snap-x gap-3 overflow-x-auto pb-2">
+          <div
+            ref={thumbsContainerRef}
+            className="scrollbar-fina flex snap-x gap-3 overflow-x-auto pb-2"
+          >
             {gallerySlides.map((item, i) => (
               <button
                 key={item.id}

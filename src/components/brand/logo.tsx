@@ -1,63 +1,71 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export function LogoMark({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 64 64"
-      className={cn("h-9 w-9", className)}
-      role="img"
-      aria-label="Isotipo de LONGIVET: una pata con corazón"
+    <span
+      className={cn(
+        "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-brand-teal/25 bg-[#FAF7F2] p-1 shadow-sm",
+        className || "size-11"
+      )}
     >
-      <defs>
-        <linearGradient id="logo-lv" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#2a9d8f" />
-          <stop offset="1" stopColor="#0d3b66" />
-        </linearGradient>
-      </defs>
-      <rect width="64" height="64" rx="16" fill="url(#logo-lv)" />
-      <g fill="#ffffff">
-        <ellipse cx="22" cy="22" rx="5.2" ry="7" transform="rotate(-18 22 22)" />
-        <ellipse cx="42" cy="22" rx="5.2" ry="7" transform="rotate(18 42 22)" />
-        <ellipse cx="13" cy="33" rx="4.6" ry="6.2" transform="rotate(-40 13 33)" />
-        <ellipse cx="51" cy="33" rx="4.6" ry="6.2" transform="rotate(40 51 33)" />
-        <path d="M32 30c7 0 13.5 5.4 13.5 12.2 0 4.6-3.4 7.8-7.6 7.8-2.6 0-4.3-1-5.9-1s-3.3 1-5.9 1c-4.2 0-7.6-3.2-7.6-7.8C18.5 35.4 25 30 32 30z" />
-      </g>
-    </svg>
+      <Image
+        src="/images/tab-logo.png"
+        alt="Isotipo Dra. Junibeth González Ramírez"
+        width={64}
+        height={88}
+        className="h-full w-auto object-contain"
+        priority
+      />
+    </span>
   );
 }
 
 export function Logo({
   className,
   tone = "dark",
+  showSubtitle = true,
 }: {
   className?: string;
   /** dark = texto oscuro para fondos claros · light = texto blanco para fondos oscuros */
   tone?: "dark" | "light";
+  showSubtitle?: boolean;
 }) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark className="h-9 w-9 shrink-0" />
-      <span className="flex flex-col leading-none">
+    <span className={cn("inline-flex items-center gap-3", className)}>
+      <span className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-brand-teal/25 bg-[#FAF7F2] p-1 shadow-sm ring-1 ring-black/5">
+        <Image
+          src="/images/tab-logo.png"
+          alt="Dra. Junibeth González Ramírez — Isotipo"
+          width={64}
+          height={88}
+          className="h-full w-auto object-contain"
+          priority
+        />
+      </span>
+      <span className="flex flex-col leading-tight">
         <span
           className={cn(
-            "text-xl font-extrabold tracking-tight",
+            "text-base sm:text-lg font-extrabold tracking-tight",
             tone === "dark"
               ? "text-brand-navy dark:text-foreground"
               : "text-white"
           )}
         >
-          LONGI<span className="text-brand-teal">VET</span>
+          Dra. Junibeth González
         </span>
-        <span
-          className={cn(
-            "mt-0.5 text-[10px] font-semibold uppercase tracking-[0.18em]",
-            tone === "dark"
-              ? "text-muted-foreground"
-              : "text-white/70"
-          )}
-        >
-          Geriatría veterinaria
-        </span>
+        {showSubtitle && (
+          <span
+            className={cn(
+              "text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.14em]",
+              tone === "dark"
+                ? "text-brand-teal dark:text-brand-teal-soft"
+                : "text-brand-gold"
+            )}
+          >
+            Medicina Geriátrica Veterinaria
+          </span>
+        )}
       </span>
     </span>
   );

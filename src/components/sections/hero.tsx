@@ -18,8 +18,8 @@ export function Hero() {
     >
       {/* Fondos decorativos */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 -right-32 h-[480px] w-[480px] rounded-full bg-brand-teal-soft blur-3xl" />
-        <div className="absolute top-64 -left-40 h-[380px] w-[380px] rounded-full bg-brand-sand-deep blur-3xl" />
+        <div className="absolute -top-32 -right-32 h-[480px] w-[480px] rounded-full bg-brand-teal-soft/80 blur-3xl dark:bg-brand-teal/10" />
+        <div className="absolute top-64 -left-40 h-[380px] w-[380px] rounded-full bg-brand-sand-deep/80 blur-3xl dark:bg-brand-navy-deep/20" />
         <div className="patron-puntos absolute top-24 left-1/2 hidden h-72 w-72 text-brand-teal/20 lg:block" />
       </div>
 

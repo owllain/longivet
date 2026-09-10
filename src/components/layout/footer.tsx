@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useState, type FormEvent } from "react";
 import {
   Clock,
+  Coffee,
   Facebook,
-  Heart,
   Instagram,
   Mail,
   MapPin,
@@ -12,7 +13,6 @@ import {
   Phone,
 } from "lucide-react";
 
-import { Logo, LogoMark } from "@/components/brand/logo";
 import { WhatsappIcon } from "@/components/layout/mobile-sticky-bar";
 import { OpenNowBadge } from "@/components/sections/open-now-badge";
 import { Button } from "@/components/ui/button";
@@ -23,21 +23,21 @@ import { site } from "@/lib/site";
 const serviciosPie = [
   { label: "Consulta geriátrica", href: "#servicios" },
   { label: "Manejo del dolor", href: "#servicios" },
-  { label: "Odontología", href: "#servicios" },
-  { label: "Laboratorio", href: "#servicios" },
-  { label: "Cuidado paliativo", href: "#servicios" },
+  { label: "Odontología senior", href: "#servicios" },
+  { label: "Laboratorio clínico", href: "#servicios" },
+  { label: "Cuidados paliativos", href: "#servicios" },
 ] as const;
 
 const explorarPie = [
   { label: "Servicios", href: "#servicios" },
   { label: "Galería", href: "#galeria" },
   { label: "Programa Senior", href: "#programa-senior" },
-  { label: "Equipo", href: "#equipo" },
+  { label: "Equipo médico", href: "#equipo" },
   { label: "Preguntas frecuentes", href: "#faq" },
   { label: "Agendar cita", href: "#agendar" },
 ] as const;
 
-const distintivos = ["Fear Free", "Certificación AHTA", "+12 años"] as const;
+const distintivos = ["Fear Free", "Certificación AHTA", "+12 años de experiencia"] as const;
 
 const redesSociales = [
   { label: "Facebook de LONGIVET", href: site.social.facebook, Icon: Facebook },
@@ -45,24 +45,12 @@ const redesSociales = [
   { label: "TikTok de LONGIVET", href: site.social.tiktok, Icon: Music2 },
 ] as const;
 
-/* Enlace con subrayado animado y foco blanco, sobre zonas oscuras del pie */
 const enlacePie =
-  "relative inline-flex min-h-11 items-center text-[15px] font-medium text-white/90 transition-colors after:absolute after:inset-x-0 after:bottom-2 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-white/80 after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 focus-visible:outline-white";
+  "relative inline-flex py-1 text-sm font-medium text-white/80 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline-white";
 
 const tituloColumna =
-  "text-sm font-bold uppercase tracking-[0.16em] text-white";
+  "text-xs font-bold uppercase tracking-[0.16em] text-brand-gold";
 
-/**
- * Footer · Patrón TRIANGULAR que va de tono CLARO (izquierda) hacia OSCURO
- * (derecha) mediante capas con clip-path diagonales, según pedido del cliente.
- *
- * Accesibilidad AA verificada por zona:
- * - Col. 1 (claro): texto brand-navy sobre panel brand-sand translúcido
- *   (garantiza AA en cualquier ancho de viewport, incluido ultrawide).
- * - Cols. 2-4 (oscuro): texto blanco; la banda teal usa brand-teal-dark
- *   (#1f7a70) porque blanco sobre brand-teal (#2a9d8f) da 3.3:1 y falla AA.
- * - Móvil: fondo sólido brand-navy-deep con texto blanco (capas ocultas).
- */
 export function Footer() {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
@@ -70,8 +58,8 @@ export function Footer() {
   function manejarSuscripcion(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     toast({
-      title: "¡Gracias!",
-      description: "Te avisaremos de novedades para el cuidado de tu mascota senior.",
+      title: "¡Suscripción exitosa!",
+      description: "Recibirás consejos exclusivos para el cuidado y confort de tu mascota senior.",
     });
     setEmail("");
   }
@@ -81,263 +69,234 @@ export function Footer() {
       role="contentinfo"
       className="relative overflow-hidden bg-brand-navy-deep text-white"
     >
-      {/* ── Capas diagonales claro → oscuro (solo tablet/desktop) ── */}
+      {/* ── Capas diagonales adaptadas a modo claro y oscuro (sin luces bruscas) ── */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden md:block"
       >
         <div
-          className="absolute inset-0 bg-brand-navy"
+          className="absolute inset-0 bg-brand-navy dark:bg-[#071726]"
           style={{ clipPath: "polygon(0 0, 82% 0, 66% 100%, 0 100%)" }}
         />
-        {/* brand-teal-dark: blanco sobre brand-teal daría 3.3:1 (falla AA) */}
         <div
-          className="absolute inset-0 bg-brand-teal-dark"
+          className="absolute inset-0 bg-brand-teal-dark dark:bg-[#0f2e3d]"
           style={{ clipPath: "polygon(0 0, 56% 0, 42% 100%, 0 100%)" }}
         />
         <div
-          className="absolute inset-0 bg-brand-teal-soft"
+          className="absolute inset-0 bg-brand-teal-soft/40 dark:bg-transparent"
           style={{ clipPath: "polygon(0 0, 30% 0, 18% 100%, 0 100%)" }}
         />
-        <div
-          className="absolute inset-0 bg-brand-sand"
-          style={{ clipPath: "polygon(0 0, 13% 0, 5% 100%, 0 100%)" }}
-        />
       </div>
 
-      {/* ── Decoración: patrón de puntos + pata gigante (zona derecha) ── */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 hidden md:block"
-      >
-        <div
-          className="patron-puntos absolute inset-y-0 right-0 w-[46%] text-white/10"
-          style={{ clipPath: "polygon(30% 0, 100% 0, 100% 100%, 12% 100%)" }}
-        />
-        <div className="absolute -bottom-16 -right-16 opacity-5">
-          <LogoMark className="h-80 w-80 rotate-12" />
-        </div>
-      </div>
+      {/* ── Contenido Principal Compacto a lo ancho ── */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-12 items-start">
+          {/* Columna 1 · Misión y Sello distintivo (Tarjeta Certificada) */}
+          <div className="lg:col-span-5">
+            <div className="rounded-2xl border border-brand-navy/10 bg-brand-sand/95 p-5 sm:p-6 text-brand-navy shadow-lg ring-1 ring-black/5 backdrop-blur-sm dark:border-brand-gold/25 dark:bg-[#0c1f33] dark:text-white">
+              <div className="flex items-center gap-4">
+                {/* Sello oficial alter-logo */}
+                <div className="relative size-24 sm:size-28 shrink-0 overflow-hidden rounded-full border-2 border-brand-gold bg-[#FAF7F2] p-1 shadow-xl ring-4 ring-brand-gold/45 transition-transform hover:scale-105">
+                  <Image
+                    src="/images/alter-logo.jpeg"
+                    alt="Sello oficial Dra. Junibeth González Ramírez"
+                    width={160}
+                    height={160}
+                    className="size-full rounded-full object-cover"
+                    priority
+                  />
+                </div>
+                <div>
+                  <span className="inline-block rounded-full border border-brand-gold/40 bg-brand-gold/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-navy dark:text-brand-gold">
+                    Sello Certificado
+                  </span>
+                  <h3 className="mt-1 text-base sm:text-lg font-extrabold tracking-tight text-brand-navy dark:text-white">
+                    Dra. Junibeth González
+                  </h3>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-brand-teal-dark dark:text-brand-gold/90">
+                    Medicina Geriátrica Veterinaria
+                  </p>
+                  <p className="mt-1 text-xs text-brand-navy/75 dark:text-slate-300">
+                    Acompañamos la última etapa de la vida de tu mascota con evidencia, empatía y dedicación personalizada.
+                  </p>
+                </div>
+              </div>
 
-      {/* ── Contenido ── */}
-      <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-12 lg:px-8">
-        {/* Columna 1 · Misión (zona clara → texto oscuro) */}
-        <div className="lg:col-span-4">
-          {/* Panel claro translúcido: asegura contraste del texto oscuro
-              sobre las bandas diagonales en cualquier ancho de pantalla */}
-          <div className="md:rounded-3xl md:bg-brand-sand/95 md:p-6 md:shadow-lg md:shadow-brand-navy/10 md:ring-1 md:ring-brand-navy/10 md:backdrop-blur-sm">
-            <Logo tone="light" className="md:hidden" />
-            <Logo tone="dark" className="hidden md:inline-flex" />
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/90 md:text-brand-navy">
-              Acompañamos la última etapa de la vida de tu mascota con medicina
-              geriátrica basada en evidencia y mucho cariño.
-            </p>
-            <ul
-              aria-label="Distintivos de la clínica"
-              className="mt-5 flex flex-wrap gap-2"
-            >
-              {distintivos.map((distintivo) => (
-                <li
-                  key={distintivo}
-                  className="rounded-full border border-white/35 px-3 py-1 text-xs font-semibold text-white md:border-brand-navy/25 md:text-brand-navy"
-                >
-                  {distintivo}
+              <ul
+                aria-label="Distintivos de la clínica"
+                className="mt-3.5 flex flex-wrap gap-2 pt-3 border-t border-brand-navy/10 dark:border-white/10"
+              >
+                {distintivos.map((distintivo) => (
+                  <li
+                    key={distintivo}
+                    className="rounded-full border border-brand-navy/15 bg-white/80 px-2.5 py-0.5 text-[11px] font-bold text-brand-navy shadow-xs dark:border-white/20 dark:bg-white/10 dark:text-slate-100"
+                  >
+                    {distintivo}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Columna 2 · Servicios */}
+          <nav aria-label="Servicios" className="lg:col-span-2 sm:col-span-6">
+            <h3 className={tituloColumna}>Servicios</h3>
+            <ul className="mt-2.5 space-y-1">
+              {serviciosPie.map((servicio) => (
+                <li key={servicio.label}>
+                  <a href={servicio.href} className={enlacePie}>
+                    {servicio.label}
+                  </a>
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
+          </nav>
 
-        {/* Columna 2 · Servicios (zona oscura → texto blanco) */}
-        <nav aria-label="Servicios" className="lg:col-span-2">
-          <h3 className={tituloColumna}>Servicios</h3>
-          <ul className="mt-4">
-            {serviciosPie.map((servicio) => (
-              <li key={servicio.label}>
-                <a href={servicio.href} className={enlacePie}>
-                  {servicio.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          {/* Columna 3 · Explora */}
+          <nav aria-label="Explorar el sitio" className="lg:col-span-2 sm:col-span-6">
+            <h3 className={tituloColumna}>Explora</h3>
+            <ul className="mt-2.5 space-y-1">
+              {explorarPie.map((enlace) => (
+                <li key={enlace.label}>
+                  <a href={enlace.href} className={enlacePie}>
+                    {enlace.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        {/* Columna 3 · Explora (zona oscura → texto blanco) */}
-        <nav aria-label="Explorar el sitio" className="lg:col-span-2">
-          <h3 className={tituloColumna}>Explora</h3>
-          <ul className="mt-4">
-            {explorarPie.map((enlace) => (
-              <li key={enlace.label}>
-                <a href={enlace.href} className={enlacePie}>
-                  {enlace.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Columna 4 · Contacto, horarios, redes y boletín */}
-        <div className="lg:col-span-4">
-          <h3 className={tituloColumna}>Contacto</h3>
-          <ul className="mt-4 space-y-3 text-[15px]">
-            <li className="flex items-start gap-3">
-              <MapPin
-                aria-hidden="true"
-                className="mt-0.5 size-5 shrink-0 text-brand-gold"
-              />
-              <span className="text-white/90">
-                {site.addressFull}
-                <br />
-                {site.address.countryName}
-              </span>
-            </li>
-            <li className="flex items-start gap-3">
-              <Phone
-                aria-hidden="true"
-                className="mt-0.5 size-5 shrink-0 text-brand-gold"
-              />
-              <a
-                href={site.phoneHref}
-                aria-label={`Llamar al ${site.phone}`}
-                className="text-white/90 underline-offset-4 transition-colors hover:text-white hover:underline"
-              >
-                {site.phone}
-              </a>
-            </li>
-            <li className="flex items-start gap-3">
-              <WhatsappIcon className="mt-0.5 size-5 shrink-0 text-brand-emerald" />
-              <a
-                href={site.whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Escribir por WhatsApp (se abre en una pestaña nueva)"
-                className="text-white/90 underline-offset-4 transition-colors hover:text-white hover:underline"
-              >
-                WhatsApp directo
-              </a>
-            </li>
-            <li className="flex items-start gap-3">
-              <Mail
-                aria-hidden="true"
-                className="mt-0.5 size-5 shrink-0 text-brand-gold"
-              />
-              <a
-                href={`mailto:${site.email}`}
-                className="text-white/90 underline-offset-4 transition-colors hover:text-white hover:underline"
-              >
-                {site.email}
-              </a>
-            </li>
-          </ul>
-
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-2">
-            <h3 className={tituloColumna}>Horarios</h3>
-            {/* Fondo blanco translúcido: sobre el navy del pie garantiza AA
-                para el texto del badge en cualquiera de sus 3 estados. */}
-            <OpenNowBadge className="border-white/30 bg-white/10 text-white" />
-          </div>
-          <ul className="mt-4 space-y-2 text-[15px]">
-            {site.hours.map((horario) => (
-              <li key={horario.days} className="flex items-start gap-3">
-                <Clock
-                  aria-hidden="true"
-                  className="mt-1 size-4 shrink-0 text-brand-gold"
-                />
-                <p className="text-white/90">
-                  <span className="font-semibold text-white">
-                    {horario.days}:
-                  </span>{" "}
-                  {horario.time}
-                </p>
-              </li>
-            ))}
-          </ul>
-
-          {/* Redes sociales · botones circulares de 44 px */}
-          <ul aria-label="Redes sociales" className="mt-8 flex gap-3">
-            {redesSociales.map(({ label, href, Icon }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${label} (se abre en una pestaña nueva)`}
-                  className="inline-flex size-11 items-center justify-center rounded-full border border-white/40 text-white transition-colors hover:bg-white hover:text-brand-navy focus-visible:outline-white"
-                >
-                  <Icon aria-hidden="true" className="size-5" />
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          {/* Mini-formulario boletín */}
-          <form
-            onSubmit={manejarSuscripcion}
-            className="mt-8 rounded-2xl border border-white/15 bg-white/5 p-4"
-          >
-            <h3 className="text-base font-bold text-white">Boletín senior</h3>
-            <p className="mt-1 text-sm text-white/75">
-              Consejos de cuidado geriátrico, una vez al mes.
-            </p>
-            <label htmlFor="boletin-correo" className="sr-only">
-              Correo electrónico para el boletín
-            </label>
-            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-              <Input
-                id="boletin-correo"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="tu@correo.cr"
-                value={email}
-                onChange={(evento) => setEmail(evento.target.value)}
-                className="h-11 flex-1 rounded-full border-white/25 bg-white/10 text-white placeholder:text-white/60"
-              />
-              <Button
-                type="submit"
-                className="h-11 shrink-0 rounded-full bg-brand-gold px-5 font-bold text-brand-navy shadow-sm transition-colors hover:bg-brand-gold/85 focus-visible:outline-white"
-              >
-                Suscribirme
-              </Button>
+          {/* Columna 4 · Contacto, Horarios y Boletín compacto */}
+          <div className="lg:col-span-3 space-y-4">
+            <div>
+              <div className="flex items-center justify-between">
+                <h3 className={tituloColumna}>Contacto & Horarios</h3>
+                <OpenNowBadge className="scale-90 border-white/30 bg-white/10 text-white" />
+              </div>
+              <ul className="mt-2 space-y-1.5 text-xs text-white/85">
+                <li className="flex items-center gap-2">
+                  <Phone className="size-3.5 text-brand-gold shrink-0" aria-hidden />
+                  <a href={site.phoneHref} className="hover:underline hover:text-white">
+                    {site.phone}
+                  </a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <WhatsappIcon className="size-3.5 text-brand-emerald shrink-0" />
+                  <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-white">
+                    WhatsApp
+                  </a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <MapPin className="size-3.5 text-brand-gold shrink-0" aria-hidden />
+                  <span>{site.addressFull}</span>
+                </li>
+                <li className="flex items-center gap-2 text-[11px] text-white/70">
+                  <Clock className="size-3.5 text-brand-gold shrink-0" aria-hidden />
+                  <span>Lun–Vie 8:00 a. m.–6:00 p. m. | Sáb 9:00 a. m.–2:00 p. m.</span>
+                </li>
+              </ul>
             </div>
-          </form>
+
+            {/* Redes Sociales + Boletín horizontal compacto */}
+            <div className="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+              <ul aria-label="Redes sociales" className="flex gap-2">
+                {redesSociales.map(({ label, href, Icon }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${label} (se abre en una pestaña nueva)`}
+                      className="inline-flex size-9 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white hover:text-brand-navy focus-visible:outline-white"
+                    >
+                      <Icon aria-hidden="true" className="size-4" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
+              <form onSubmit={manejarSuscripcion} className="flex gap-1.5 flex-1 min-w-[200px]">
+                <Input
+                  id="boletin-correo"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="Boletín: tu@correo.cr"
+                  value={email}
+                  onChange={(evento) => setEmail(evento.target.value)}
+                  className="h-9 text-xs rounded-full border-white/20 bg-white/10 text-white placeholder:text-white/60"
+                />
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="h-9 rounded-full bg-brand-gold px-3 text-xs font-bold text-brand-navy hover:bg-brand-gold/85 shrink-0"
+                >
+                  OK
+                </Button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ── Barra inferior legal ── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-3 border-t border-white/15 py-6 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
-          <p>
+      {/* ── Barra inferior legal con créditos ── */}
+      <div className="relative z-10 border-t border-white/15 bg-black/15">
+        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-white/70">
+          {/* Copyright desplazado hacia la derecha */}
+          <p className="sm:ml-8 sm:pl-4 font-medium text-white/80">
             © 2026 {site.legalName} · Escazú, Costa Rica
           </p>
-          <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+
+          <ul className="flex flex-wrap items-center gap-x-5 gap-y-1 text-xs">
             <li>
               <a
-                href="#"
-                aria-label="Política de privacidad de LONGIVET"
-                className="underline-offset-4 transition-colors hover:text-white hover:underline"
+                href="#contenido"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast({
+                    title: "Política de Privacidad",
+                    description: "En LONGIVET cuidamos tus datos y los de tu mascota con total confidencialidad y ética médica.",
+                  });
+                }}
+                className="underline-offset-4 transition-colors hover:text-white hover:underline cursor-pointer"
               >
                 Política de privacidad
               </a>
             </li>
             <li>
               <a
-                href="#"
-                aria-label="Términos de atención de LONGIVET"
-                className="underline-offset-4 transition-colors hover:text-white hover:underline"
+                href="#contenido"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast({
+                    title: "Términos de Atención",
+                    description: "Servicios de consulta veterinaria programada con enfoque geriátrico y bienestar animal.",
+                  });
+                }}
+                className="underline-offset-4 transition-colors hover:text-white hover:underline cursor-pointer"
               >
                 Términos de atención
               </a>
             </li>
           </ul>
-          <p className="inline-flex items-center gap-1.5">
+
+          {/* Crédito: Hecho con café por Ing. Enrique Cascante */}
+          <p className="inline-flex items-center gap-1.5 text-xs text-white/80">
             Hecho con
-            <Heart
+            <Coffee
               aria-hidden="true"
-              className="size-4 fill-rose-300 text-rose-300"
+              className="size-4 text-amber-400 shrink-0"
             />
-            en Costa Rica
+            por{" "}
+            <a
+              href="https://www.linkedin.com/in/enrique-cascante/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-white transition-colors hover:text-brand-gold hover:underline underline-offset-4"
+            >
+              Ing. Enrique Cascante
+            </a>
           </p>
         </div>
       </div>

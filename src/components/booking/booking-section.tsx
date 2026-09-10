@@ -302,6 +302,7 @@ export default function BookingSection() {
   const [codigoCopiado, setCodigoCopiado] = useState(false);
   const [servicioDestacado, setServicioDestacado] = useState<string | null>(null);
   const tarjetaRef = useRef<HTMLDivElement>(null);
+  const montadoRef = useRef(false);
 
   /* Actualiza un campo y limpia su error asociado. */
   const actualizar = useCallback(<K extends keyof Formulario>(campo: K, valor: Formulario[K]) => {
@@ -319,8 +320,12 @@ export default function BookingSection() {
     setDias(generarDias(DIAS_HORIZONTE));
   }, []);
 
-  /* Mantiene el asistente a la vista al cambiar de paso o al confirmar. */
+  /* Mantiene el asistente a la vista al cambiar de paso o al confirmar (sin saltar al montar). */
   useEffect(() => {
+    if (!montadoRef.current) {
+      montadoRef.current = true;
+      return;
+    }
     tarjetaRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [paso, confirmacion]);
 
@@ -644,7 +649,7 @@ export default function BookingSection() {
                       className="flex min-h-[44px] items-center gap-2.5 rounded-xl bg-white/5 px-3 text-sm font-semibold transition-colors hover:bg-white/15"
                     >
                       <MessageCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-                      WhatsApp directo
+                      WhatsApp
                       <span className="sr-only">(abre en una pestaña nueva)</span>
                     </a>
                   </div>

@@ -88,7 +88,7 @@ export function Contact() {
                     aria-label="Escribir a LONGIVET por WhatsApp"
                   >
                     <MessageCircle className="h-4 w-4 text-brand-emerald" aria-hidden />
-                    WhatsApp directo
+                    WhatsApp
                   </a>
                   <a
                     href={`mailto:${site.email}`}

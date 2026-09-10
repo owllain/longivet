@@ -10,14 +10,14 @@ export const site = {
   description:
     "Clínica veterinaria especializada en el cuidado de mascotas senior: geriatría, manejo del dolor, rehabilitación, odontología y medicina preventiva. Atención con cita y guía Telefónica permanente.",
   url: "https://longivet.cr",
-  phone: "+506 4000 1234",
-  phoneHref: "tel:+50640001234",
-  emergencyPhone: "+506 8888 7654",
-  emergencyPhoneHref: "tel:+50688887654",
-  whatsappNumber: "50688887654",
+  phone: "+506 7139 9239",
+  phoneHref: "tel:+50671399239",
+  emergencyPhone: "+506 7139 9239",
+  emergencyPhoneHref: "tel:+50671399239",
+  whatsappNumber: "50671399239",
   whatsappHref:
-    "https://wa.me/50688887654?text=" +
-    encodeURIComponent("Hola LONGIVET, quiero información sobre los servicios para mi mascota senior."),
+    "https://wa.me/50671399239?text=" +
+    encodeURIComponent("Hola Dra. Junibeth, quiero información sobre la atención geriátrica para mi mascota senior."),
   email: "hola@longivet.cr",
   address: {
     street: "Avenida Esqualí 145, San Rafael",

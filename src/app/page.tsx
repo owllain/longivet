@@ -1,4 +1,3 @@
-import { CrisisBar } from "@/components/layout/crisis-bar";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { MobileStickyBar } from "@/components/layout/mobile-sticky-bar";
@@ -20,7 +19,6 @@ import BookingSection from "@/components/booking/booking-section";
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      <CrisisBar />
       <ScrollProgress />
       <Navbar />
       <main id="contenido" className="flex-1">

@@ -72,7 +72,7 @@ export function FloatingWhatsapp() {
               expandido ? "opacity-100 delay-150" : "opacity-0"
             )}
           >
-            ¿Consultamos tu caso?
+            Contáctanos
           </span>
         </motion.a>
       )}

@@ -62,6 +62,14 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/images/tab-logo.png", type: "image/png" },
+    ],
+    apple: "/images/tab-logo.png",
+    shortcut: "/icon.svg",
+  },
   category: "healthcare",
 };
 

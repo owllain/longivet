@@ -102,10 +102,10 @@ export function Recursos() {
           </p>
         </Reveal>
 
-        <div className="mx-auto mt-12 grid max-w-6xl gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-12 grid items-start max-w-6xl gap-6 md:grid-cols-3">
           {guias.map((g, i) => (
             <Reveal key={g.titulo} delay={i * 0.08}>
-              <article className="flex h-full flex-col rounded-3xl border bg-card transition hover:-translate-y-1 hover:shadow-lg">
+              <article className="flex flex-col rounded-3xl border bg-card transition hover:-translate-y-1 hover:shadow-lg">
                 <div className="flex items-center gap-3 p-6 pb-0">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-teal-soft">
                     <g.icon className="h-5 w-5 text-brand-teal-dark" aria-hidden />
