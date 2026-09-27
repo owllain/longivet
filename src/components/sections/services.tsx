@@ -30,7 +30,7 @@ const servicios = [
   {
     icon: Stethoscope,
     titulo: "Medicina interna",
-    desc: "Diagnóstico y tratamiento de patologías Cardíacas, renales, hepáticas y endocrinas del adulto mayor.",
+    desc: "Diagnóstico y tratamiento de patologías cardíacas, renales, hepáticas y endocrinas del adulto mayor.",
   },
   {
     icon: Syringe,
@@ -40,6 +40,7 @@ const servicios = [
   {
     icon: ScanLine,
     titulo: "Diagnóstico por imagen",
+    coordinated: true,
     desc: "Valoración de la necesidad de radiografías y ultrasonidos, con coordinación de estudios según cada paciente.",
   },
   {
@@ -50,6 +51,7 @@ const servicios = [
   {
     icon: Smile,
     titulo: "Odontología veterinaria",
+    coordinated: true,
     desc: "Revisión de la salud bucal en casa y planificación de los procedimientos que requieran instalaciones especializadas.",
   },
   {
@@ -61,10 +63,10 @@ const servicios = [
 
 export function Services() {
   return (
-    <section id="servicios" aria-labelledby="titulo-servicios" className="py-20 md:py-24">
+    <section id="servicios" aria-labelledby="titulo-servicios" className="py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full bg-brand-teal-soft px-4 py-1.5 text-sm font-semibold text-accent-foreground">
+          <p className="inline-flex items-center gap-2 rounded-full bg-brand-teal-soft dark:bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground">
             <Brain className="h-4 w-4" aria-hidden />
             Especialidades con enfoque gerontológico
           </p>
@@ -102,6 +104,7 @@ export function Services() {
                   <h3 className="text-lg font-bold text-brand-navy dark:text-foreground">
                     {s.titulo}
                   </h3>
+                  <p className="mt-3 self-start rounded-full bg-brand-teal-soft px-3 py-1 text-xs font-bold text-accent-foreground dark:bg-accent">{s.coordinated ? "Valoración en casa · procedimiento coordinado" : s.titulo === "Laboratorio clínico" ? "Toma de muestras en casa" : "Atención en casa"}</p>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                     {s.desc}
                   </p>

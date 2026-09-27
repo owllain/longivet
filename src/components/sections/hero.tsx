@@ -13,11 +13,11 @@ export function Hero() {
       aria-labelledby="titulo-inicio"
       className="relative overflow-hidden"
     >
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pt-10 pb-16 sm:px-6 md:pt-16 md:pb-24 lg:grid-cols-2 lg:gap-8">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pt-10 pb-12 sm:px-6 md:pt-16 md:pb-14 lg:grid-cols-2 lg:gap-8">
         {/* Columna de mensaje */}
         <div className="max-w-xl">
           <Reveal>
-            <p className="inline-flex items-center gap-2 rounded-full border border-brand-teal/30 bg-brand-teal-soft px-4 py-1.5 text-sm font-semibold text-accent-foreground">
+            <p className="inline-flex items-center gap-2 rounded-full border border-brand-teal/30 bg-brand-teal-soft dark:bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground">
               <Sparkles className="h-4 w-4" aria-hidden />
               Cuidado especializado para mascotas mayores
             </p>
@@ -43,7 +43,7 @@ export function Hero() {
             <div className="mt-8 flex flex-wrap items-center gap-2 sm:gap-3">
               <a
                 href={site.whatsappHref} target="_blank" rel="noopener noreferrer"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand-teal-dark px-4 text-sm font-bold text-white shadow-lg shadow-brand-teal/25 transition hover:bg-brand-teal focus-visible:outline-2 sm:h-14 sm:px-7 sm:text-base"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand-teal-dark px-4 text-sm font-bold text-white shadow-lg shadow-brand-teal/25 transition hover:bg-brand-teal dark:hover:bg-brand-teal-dark focus-visible:outline-2 sm:h-14 sm:px-7 sm:text-base"
               >
                 <WhatsappIcon className="h-5 w-5" />
                 Agendar por WhatsApp

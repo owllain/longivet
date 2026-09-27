@@ -3,7 +3,7 @@
 ## Cambios de esta revisión
 
 - Historias: carrusel manual con deslizamiento, flechas, indicadores y teclado (izquierda, derecha, Inicio, Fin). Respeta movimiento reducido. No avanza mientras alguien lee.
-- Responsive: menú compacto hasta 1536 px, marca flexible, barra móvil con tarifas y una única acción de WhatsApp, espacio inferior que considera el área segura del dispositivo. Las tarifas ya tienen tarjetas móviles y tabla para pantallas mayores.
+- Responsive: navegación abreviada desde 1280 px y menú ampliado para todas las secciones; contacto fijo en el encabezado y barra móvil. Se retiraron los botones flotantes que tapaban precios. Marca flexible y espacio inferior que considera el área segura del dispositivo. Las tarifas tienen tarjetas móviles y tabla para pantallas mayores.
 - Formulario: límites, tipos, opciones permitidas, fechas reales, horas y consentimiento verificados antes de preparar el mensaje. Se rechazan controles invisibles y saltos en campos de una línea. La URL de WhatsApp conserva un destino fijo y codifica el texto.
 - Datos estructurados: escape de `<` antes de insertarlos como JSON-LD.
 - Cabeceras: restricciones de orígenes mediante CSP, bloqueo de incrustación del sitio en marcos externos, bloqueo de objetos, `nosniff`, política de referencia y permisos de cámara/micrófono/geolocalización desactivados. La entrevista de Dailymotion está permitida.
@@ -20,7 +20,9 @@ El sitio no recibe ni almacena solicitudes del formulario en un servidor: prepar
 
 La CSP admite scripts y estilos inline por compatibilidad con las páginas estáticas de Next y el tema. Reduce orígenes y posibilidades de incrustación; no constituye una protección completa contra XSS. Mantener escape de contenido y no renderizar HTML proporcionado por visitantes. No se trata de una auditoría de penetración ni de una garantía de ausencia de vulnerabilidades.
 
-No se completó la prueba visual/interactiva en navegador por la restricción de acceso de esta sesión. Antes de publicar, comprobar a 320, 375, 768, 1024, 1280 y 1536 px: ausencia de desplazamiento horizontal de la página, menú completo, tarjetas de tarifas, apertura y envío del formulario, deslizamiento y teclado del carrusel, reproducción de la entrevista, modo oscuro, zoom al 200 % y controles de móvil. Verificar las cabeceras aplicadas por el alojamiento y que la CSP no bloquee recursos legítimos.
+Revisión en navegador local completada para estos cambios: sin desbordamiento horizontal del documento a 320, 375, 768, 1024, 1280 y 1536 px; portada y planes en móvil; navegación abreviada en escritorio; menú móvil y cierre con Escape que devuelve el foco al activador; formulario desplegable con Enter y acceso por Tab al primer campo; FAQ con cinco preguntas iniciales, búsqueda, filtros y limpieza que devuelve el foco al buscador; carrusel con flechas e indicadores activados por teclado; vista clara y oscura de la portada. Se reforzaron textos secundarios, fondos de etiquetas oscuras, bordes de campos y placeholders. Esta comprobación no equivale a una certificación completa de WCAG.
+
+Antes de publicar siguen pendientes las pruebas con lector de pantalla y zoom al 200 %, reproducción de la entrevista en el alojamiento definitivo y verificación de cabeceras/CSP del dominio público. En esta revisión no se enviaron mensajes de prueba por WhatsApp.
 
 ## Publicación y captación
 

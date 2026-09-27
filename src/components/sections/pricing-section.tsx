@@ -201,7 +201,7 @@ export function PricingSection() {
     <section
       id="tarifas"
       aria-labelledby="titulo-tarifas"
-      className="relative overflow-hidden py-20 md:py-24"
+      className="relative overflow-hidden py-12 sm:py-16"
     >
       {/* Fondo decorativo sutil */}
       <div
@@ -312,7 +312,7 @@ export function PricingSection() {
                 <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal" aria-hidden />
                 <span>
                   <strong>Información de cobertura:</strong> Las visitas a domicilio se realizan en el área de
-                  Cartago, San José y zonas cercanas previa confirmación de agenda. Tratamientos o medicamentos adicionales se cotizan de forma transparente antes de su aplicación.
+                  Cartago, San José y zonas cercanas previa confirmación de agenda. Consulta si tu zona implica un costo adicional de traslado y confirma el total antes de acordar la cita. Tratamientos o medicamentos adicionales se cotizan de forma transparente antes de su aplicación.
                 </span>
               </div>
               <a

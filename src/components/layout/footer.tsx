@@ -36,7 +36,7 @@ const redesSociales = [
 ] as const;
 
 const enlacePie =
-  "relative inline-flex py-1 text-sm font-medium text-white/80 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline-white";
+  "relative inline-flex min-h-11 items-center py-1 text-sm font-medium text-white/80 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline-white";
 
 const tituloColumna =
   "text-xs font-bold uppercase tracking-[0.16em] text-brand-gold";
@@ -92,7 +92,7 @@ export function Footer() {
                     Medicina Geriátrica Veterinaria
                   </p>
                   <p className="mt-1 text-xs text-brand-navy/75 dark:text-slate-300">
-                    Acompañamos la última etapa de la vida de tu mascota con evidencia, empatía y dedicación personalizada.
+                    Cuidamos su bienestar durante sus años senior con evidencia, empatía y dedicación personalizada.
                   </p>
                 </div>
               </div>

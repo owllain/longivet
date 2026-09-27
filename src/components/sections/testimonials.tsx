@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Heart, Quote } from "lucide-react";
+import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 
 // Fragmentos de los testimonios compartidos por sus familias.
 const stories = [
@@ -35,14 +35,14 @@ export function Testimonials() {
     });
   }
   return (
-    <section aria-labelledby="titulo-historias" className="bg-[#0d3b66] py-20 text-white">
+    <section id="historias" aria-labelledby="titulo-historias" className="bg-[#0d3b66] py-12 sm:py-16 text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-bold uppercase tracking-wider text-brand-gold">En palabras de sus familias</p>
           <h2 id="titulo-historias" className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">Historias que nos hacen levantarnos cada mañana</h2>
         </div>
         <div role="region" aria-roledescription="carrusel" aria-label="Testimonios de las familias" className="mx-auto mt-10 max-w-5xl">
-          <p id="historias-ayuda" className="mb-5 text-center text-sm text-white/70">Cada familia, una historia. Desliza o usa las flechas para descubrirlas.</p>
+          <p id="historias-ayuda" className="mb-5 text-center text-sm text-white/85">Cada familia, una historia. Desliza o usa las flechas para descubrirlas.</p>
           <div ref={viewport} tabIndex={0} aria-describedby="historias-ayuda"
             className="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-3xl border border-white/20 bg-white/[0.07] shadow-2xl shadow-black/10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold"
             onScroll={event => {
@@ -57,7 +57,7 @@ export function Testimonials() {
             {stories.map((story, index) => (
               <figure key={story.pet} role="group" aria-roledescription="diapositiva" aria-label={`${index + 1} de ${stories.length}: ${story.name}`} className="grid w-full min-w-0 shrink-0 snap-center snap-always content-center gap-6 p-6 sm:p-10 md:grid-cols-[1fr_2fr] md:gap-10">
                 <figcaption className="flex flex-col justify-center border-b border-white/15 pb-6 md:border-r md:border-b-0 md:pr-8 md:pb-0">
-                  <span className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-brand-gold/15 text-brand-gold"><Heart className="size-6" aria-hidden /></span>
+                  <span aria-hidden className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-brand-gold/15 text-2xl font-extrabold text-brand-gold">{story.pet[0]}</span>
                   <p className="text-xl font-bold">{story.name}</p>
                   <p className="mt-2 text-sm leading-relaxed text-white/70">{story.pet}</p>
                 </figcaption>

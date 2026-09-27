@@ -83,13 +83,13 @@ export function Navbar() {
         </a>
 
         {/* Navegación desktop: píldoras con smooth-scroll (CSS scroll-behavior) */}
-        <nav aria-label="Navegación principal" className="hidden 2xl:block">
+        <nav aria-label="Navegación principal" className="hidden xl:block">
           <ul className="flex items-center gap-1">
-            {navLinks.map((link) => (
+            {navLinks.filter(link => ["#servicios", "#tarifas", "#programa-senior", "#equipo"].includes(link.href)).map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  aria-current={active === link.href ? "true" : undefined}
+                  aria-current={active === link.href ? "location" : undefined}
                   className={cn(
                     "inline-flex h-11 items-center rounded-full px-3 text-sm font-semibold transition-colors",
                     active === link.href
@@ -105,7 +105,8 @@ export function Navbar() {
         </nav>
 
         {/* CTA desktop + toggle de tema */}
-        <div className="hidden items-center gap-2 2xl:flex">
+        <div className="ml-auto hidden items-center gap-2 md:flex">
+          <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand-teal-dark px-4 text-sm font-bold text-white">Agendar por WhatsApp</a>
           <ThemeToggle />
 
         </div>
@@ -118,7 +119,7 @@ export function Navbar() {
               aria-label="Abrir menú de navegación"
               aria-expanded={open}
               aria-controls="menu-movil"
-              className="inline-flex size-12 shrink-0 items-center justify-center rounded-full text-brand-navy dark:text-foreground transition-colors hover:bg-primary/10 2xl:hidden"
+              className="inline-flex size-12 shrink-0 items-center justify-center rounded-full text-brand-navy dark:text-foreground transition-colors hover:bg-primary/10"
             >
               <Menu aria-hidden="true" className="size-6" />
             </button>
@@ -134,7 +135,7 @@ export function Navbar() {
               Secciones del sitio y contactos rápidos de LONGIVET.
             </SheetDescription>
 
-            <div className="flex min-h-20 items-center border-b border-border pl-5 pr-12">
+            <div className="flex min-h-20 shrink-0 items-center border-b border-border pl-5 pr-12">
               <SheetClose asChild>
                 <a
                   href="#inicio"
@@ -147,8 +148,8 @@ export function Navbar() {
             </div>
 
             <nav
-              aria-label="Navegación móvil"
-              className="flex-1 overflow-y-auto px-3 py-3"
+              aria-label="Todas las secciones"
+              className="min-h-0 flex-1 overflow-y-auto px-3 py-3"
             >
               <ul className="divide-y divide-border">
                 {navLinks.map((link) => (
@@ -171,7 +172,7 @@ export function Navbar() {
               </ul>
             </nav>
 
-            <div className="space-y-3 border-t border-border p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+            <div className="shrink-0 space-y-3 border-t border-border p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
               <div className="flex items-center justify-between rounded-2xl border border-border px-4 py-2">
                 <span className="text-sm font-semibold text-foreground">
                   Apariencia del sitio

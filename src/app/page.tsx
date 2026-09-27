@@ -1,8 +1,8 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { MobileStickyBar } from "@/components/layout/mobile-sticky-bar";
-import { BackToTop, ScrollProgress } from "@/components/layout/ux-details";
-import { FloatingWhatsapp } from "@/components/layout/floating-whatsapp";
+import { ScrollProgress } from "@/components/layout/ux-details";
+import { TrustOverview, VisitOverview } from "@/components/sections/visit-overview";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Hero } from "@/components/sections/hero";
 import { StatsStrip } from "@/components/sections/stats-strip";
@@ -20,9 +20,11 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <ScrollProgress />
       <Navbar />
-      <main id="contenido" className="min-w-0 flex-1">
+      <main tabIndex={-1} id="contenido" className="min-w-0 flex-1">
         <Hero />
+        <TrustOverview />
         <Services />
+        <VisitOverview />
         <PricingSection />
         <SeniorProgram />
         <Team />
@@ -37,9 +39,7 @@ export default function Home() {
       {/* Espacio para la barra fija móvil (Ley de Fitts) sin tapar el footer */}
       <div aria-hidden className="h-[calc(76px+env(safe-area-inset-bottom))] md:hidden" />
       <MobileStickyBar />
-      <BackToTop />
-      {/* Botón flotante de WhatsApp (solo escritorio) */}
-      <FloatingWhatsapp />
+
     </div>
   );
 }

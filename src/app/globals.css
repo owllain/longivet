@@ -59,7 +59,7 @@
   /* ── Paleta oficial LONGIVET (según especificación estratégica) ── */
   --brand-navy: #0d3b66;        /* Azul médico profundo: autoridad clínica */
   --brand-navy-deep: #092a4a;
-  --brand-teal: #2a9d8f;        /* Verde salvia: salud y bienestar */
+  --brand-teal: #237e73;        /* Verde salvia: salud y bienestar */
   --brand-teal-dark: #1f7a70;
   --brand-teal-soft: #e4f2ef;
   --brand-emerald: #10b981;
@@ -80,14 +80,14 @@
   --secondary: #2a9d8f;
   --secondary-foreground: #ffffff;
   --muted: #f1ece2;
-  --muted-foreground: #5c6b7a;
+  --muted-foreground: #4c5d6b;
   --accent: #e4f2ef;
   --accent-foreground: #175e54;
   --destructive: #e63946;
   --destructive-foreground: #ffffff;
   --border: #e7e1d4;
-  --input: #ddd6c8;
-  --ring: #2a9d8f;
+  --input: #858e95;
+  --ring: #175e54;
   --chart-1: #2a9d8f;
   --chart-2: #0d3b66;
   --chart-3: #e9c46a;
@@ -104,6 +104,7 @@
 }
 
 .dark {
+  --brand-teal: #70c9ba;
   --background: #0b1622;
   --foreground: #e6edf3;
   --card: #11202f;
@@ -115,13 +116,13 @@
   --secondary: #1c3547;
   --secondary-foreground: #d9e7e4;
   --muted: #152839;
-  --muted-foreground: #9db0c0;
+  --muted-foreground: #b4c3cf;
   --accent: #14333a;
   --accent-foreground: #8ed0c6;
   --destructive: #f26672;
   --destructive-foreground: #2a0509;
   --border: #22364a;
-  --input: #2a4056;
+  --input: #698296;
   --ring: #3fa796;
   --chart-1: #3fa796;
   --chart-2: #7fb3d5;
@@ -144,10 +145,16 @@
   }
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    scroll-padding-bottom: 6rem;
   }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "ss01" on;
+  }
+  input::placeholder, textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 1;
   }
   section[id] {
     scroll-margin-top: 5.5rem;
@@ -226,6 +233,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+  .dark .texto-marca {
+    background: none;
+    color: #8ed0c6;
   }
   /* Flotación suave para tarjetas destacadas */
   @keyframes floaty {
