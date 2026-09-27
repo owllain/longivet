@@ -1,199 +1,82 @@
 "use client";
 
-/* ─────────────────────────────────────────────────────────────
-   LONGIVET · Testimonios en marquee horizontal infinito
-   - Dos pistas idénticas (la segunda aria-hidden): al desplazar
-     la pista -50 % el bucle es perfecto y sin saltos.
-   - Pausa con hover y con foco (animation-play-state: paused).
-   - Con prefers-reduced-motion: grid estático de 3 columnas sin
-     marquee (detectado SSR-safe con useSyncExternalStore).
-   - La lista original es legible por lectores de pantalla; el
-     duplicado es decorativo (aria-hidden).
-   ───────────────────────────────────────────────────────────── */
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, Heart, Quote } from "lucide-react";
 
-import { useSyncExternalStore } from "react";
-import { Quote, Star } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Reveal } from "@/components/sections/reveal";
-
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-function subscribeReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-
-function getReducedMotionSnapshot() {
-  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
-}
-
-const testimonios = [
+// Fragmentos de los testimonios compartidos por sus familias.
+const stories = [
   {
-    cita:
-      "Con Kiara (golden, 11 años) creíamos que ya no caminaba por «vieja». La Dra. Solís encontró artritis con dolor real y hoy vuelve a acompañarnos al parque. No tienen idea de lo que eso significa para nosotros.",
-    nombre: "Familia Ureña",
-    mascota: "Kiara · golden retriever, 11 años",
-    estrellas: 5,
+    name: "Ivannia G.",
+    pet: "Miko · gato siamés, 12 años",
+    quote: "Miko perdía peso y maullaba de noche sin parar. […] Verlo volver a perseguir su ratoncito a los 12 años no tiene precio.",
   },
   {
-    cita:
-      "Mi gato paniqué toda la vida en veterinarias. Con la sala felina y las feromonas, Simba se quedó dormido en la consulta. Es la primera vez en 13 años que lo veo tranquilo en una clínica.",
-    nombre: "Carlos M.",
-    mascota: "Simba · gato mestizo, 13 años",
-    estrellas: 5,
+    name: "Randall y Priscila",
+    pet: "Dulce · cocker spaniel, 9 años",
+    quote: "Dulce llevaba años con otitis que no sanaban y le dolía masticar. La odontología con sedación monitorizada y el plan para sus oídos le cambiaron la vida: duerme la noche completa y ya no se rasca de desesperación. Gracias por tanta dedicación.",
   },
   {
-    cita:
-      "Nos acompañaron en lo más difícil con mimo y honestidad: nunca nos vendieron esperanza falsa, pero Rocko pasó sus últimos meses sin dolor y nos despedimos en casa. Eternamente agradecidos.",
-    nombre: "Ana Gabriela R.",
-    mascota: "Rocko · beagle, 15 años",
-    estrellas: 5,
-  },
-  {
-    cita:
-      "A Bruno le detectaron la enfermedad renal a los 13 y pensamos que era el final. Con la dieta, los controles cada tres meses y la paciencia del equipo, hoy tiene 14 y sigue mandando en el parque de Escazú. Nos cuidaron a nosotros igual que a él.",
-    nombre: "Familia Solano",
-    mascota: "Bruno · schnauzer, 14 años",
-    estrellas: 5,
-  },
-  {
-    cita:
-      "Miko perdía peso y maullaba de noche sin parar. Ese mismo día teníamos resultados de laboratorio y el plan para su hipertiroidismo, explicado sin tecnicismos. Verlo volver a perseguir su ratoncito a los 12 años no tiene precio.",
-    nombre: "Ivannia G.",
-    mascota: "Miko · gato siamés, 12 años",
-    estrellas: 5,
-  },
-  {
-    cita:
-      "Dulce llevaba años con otitis que no sanaban y le dolía masticar. La odontología con sedación monitorizada y el plan para sus oídos le cambiaron la vida: duerme la noche completa y ya no se rasca de desesperación. Gracias por tanta dedicación.",
-    nombre: "Randall y Priscila",
-    mascota: "Dulce · cocker spaniel, 9 años",
-    estrellas: 5,
+    name: "Carlos M.",
+    pet: "Simba · gato mestizo, 13 años",
+    quote: "[…] Simba se quedó dormido en la consulta. Es la primera vez en 13 años que lo veo tranquilo […].",
   },
 ];
 
-type Testimonio = (typeof testimonios)[number];
-
-function TarjetaTestimonio({
-  testigo,
-  className,
-}: {
-  testigo: Testimonio;
-  className?: string;
-}) {
-  return (
-    <figure
-      className={cn(
-        "flex h-full flex-col rounded-3xl bg-white/[0.07] p-7 ring-1 ring-white/15 backdrop-blur transition-colors hover:bg-white/[0.12]",
-        className
-      )}
-    >
-      <Quote className="h-8 w-8 text-brand-gold" aria-hidden="true" />
-      <div
-        className="mt-3 flex items-center gap-1"
-        role="img"
-        aria-label={`Calificación: ${testigo.estrellas} de 5 estrellas`}
-      >
-        {Array.from({ length: testigo.estrellas }).map((_, s) => (
-          <Star
-            key={s}
-            className="h-4 w-4 fill-brand-gold text-brand-gold"
-            aria-hidden="true"
-          />
-        ))}
-      </div>
-      <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-white/85">
-        «{testigo.cita}»
-      </blockquote>
-      <figcaption className="mt-5 border-t border-white/15 pt-4">
-        <p className="text-sm font-bold text-white">{testigo.nombre}</p>
-        <p className="text-xs text-white/60">{testigo.mascota}</p>
-      </figcaption>
-    </figure>
-  );
-}
-
 export function Testimonials() {
-  // SSR-safe: la instantánea de servidor es false → mismo HTML en servidor
-  // e hidratación; luego se ajusta sin desajuste de hidratación.
-  const reducedMotion = useSyncExternalStore(
-    subscribeReducedMotion,
-    getReducedMotionSnapshot,
-    () => false
-  );
-
+  const viewport = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  function goTo(index: number) {
+    const element = viewport.current;
+    if (!element) return;
+    const next = (index + stories.length) % stories.length;
+    element.scrollTo({
+      left: next * element.clientWidth,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    });
+  }
   return (
-    <section
-      aria-labelledby="titulo-testimonios"
-      className="relative overflow-hidden bg-primary py-20 md:py-24 dark:bg-brand-navy"
-    >
-      <div aria-hidden="true" className="patron-puntos absolute inset-0 text-white/10" />
-      <div
-        aria-hidden="true"
-        className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-brand-teal/20 blur-3xl"
-      />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white ring-1 ring-white/20">
-            <Star className="h-4 w-4 fill-brand-gold text-brand-gold" aria-hidden="true" />
-            4,9 / 5 · 412 reseñas verificadas
-          </p>
-          <h2
-            id="titulo-testimonios"
-            className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl"
-          >
-            Historias que nos hacen levantarnos cada mañana
-          </h2>
-          <p className="mt-4 text-sm text-white/70">
-            Pasa el cursor o el foco sobre las historias para pausarlas.
-          </p>
-        </Reveal>
-
-        {reducedMotion ? (
-          /* Preferencia reduced-motion: grid estático de 3 columnas, sin marquee */
-          <ul className="mt-12 grid gap-6 md:grid-cols-3">
-            {testimonios.map((t) => (
-              <Reveal as="li" key={t.nombre}>
-                <TarjetaTestimonio testigo={t} />
-              </Reveal>
+    <section aria-labelledby="titulo-historias" className="bg-[#0d3b66] py-20 text-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-bold uppercase tracking-wider text-brand-gold">En palabras de sus familias</p>
+          <h2 id="titulo-historias" className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">Historias que nos hacen levantarnos cada mañana</h2>
+        </div>
+        <div role="region" aria-roledescription="carrusel" aria-label="Testimonios de las familias" className="mx-auto mt-10 max-w-5xl">
+          <p id="historias-ayuda" className="mb-5 text-center text-sm text-white/70">Cada familia, una historia. Desliza o usa las flechas para descubrirlas.</p>
+          <div ref={viewport} tabIndex={0} aria-describedby="historias-ayuda"
+            className="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-3xl border border-white/20 bg-white/[0.07] shadow-2xl shadow-black/10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold"
+            onScroll={event => {
+              const element = event.currentTarget;
+              setActive(Math.max(0, Math.min(stories.length - 1, Math.round(element.scrollLeft / element.clientWidth))));
+            }}
+            onKeyDown={event => {
+              if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+              event.preventDefault();
+              goTo(event.key === "Home" ? 0 : event.key === "End" ? stories.length - 1 : active + (event.key === "ArrowRight" ? 1 : -1));
+            }}>
+            {stories.map((story, index) => (
+              <figure key={story.pet} role="group" aria-roledescription="diapositiva" aria-label={`${index + 1} de ${stories.length}: ${story.name}`} className="grid w-full min-w-0 shrink-0 snap-center snap-always content-center gap-6 p-6 sm:p-10 md:grid-cols-[1fr_2fr] md:gap-10">
+                <figcaption className="flex flex-col justify-center border-b border-white/15 pb-6 md:border-r md:border-b-0 md:pr-8 md:pb-0">
+                  <span className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-brand-gold/15 text-brand-gold"><Heart className="size-6" aria-hidden /></span>
+                  <p className="text-xl font-bold">{story.name}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-white/70">{story.pet}</p>
+                </figcaption>
+                <div className="min-w-0 self-center">
+                  <Quote className="mb-4 size-9 text-brand-gold" aria-hidden />
+                  <blockquote className="text-base leading-relaxed text-white/95 sm:text-lg lg:text-xl">«{story.quote}»</blockquote>
+                </div>
+              </figure>
             ))}
-          </ul>
-        ) : (
-          <Reveal className="mt-12" as="div">
-            <div
-              className="-mx-4 overflow-hidden sm:-mx-6 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
-            >
-              {/* Pista animada: contiene DOS copias de la lista; al recorrer
-                  -50 % el segundo juego entra exactamente donde estaba el
-                  primero → bucle infinito perfecto. */}
-              <div className="flex w-max animate-marquee will-change-transform hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]">
-                <ul
-                  aria-label="Historias de familias que confían en LONGIVET"
-                  className="flex gap-6 pr-6"
-                >
-                  {testimonios.map((t) => (
-                    <li key={t.nombre} className="flex w-[22rem] max-w-[85vw] shrink-0">
-                      <TarjetaTestimonio testigo={t} />
-                    </li>
-                  ))}
-                </ul>
-                {/* Duplicado decorativo: invisible para lectores de pantalla */}
-                <ul aria-hidden="true" className="flex gap-6 pr-6">
-                  {testimonios.map((t) => (
-                    <li
-                      key={`doble-${t.nombre}`}
-                      className="flex w-[22rem] max-w-[85vw] shrink-0"
-                    >
-                      <TarjetaTestimonio testigo={t} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-between">
+            <p className="text-sm tabular-nums text-white/70" aria-live="polite" aria-atomic="true">Historia {active + 1} de {stories.length}</p>
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={() => goTo(active - 1)} aria-label="Historia anterior" className="inline-flex size-11 items-center justify-center rounded-full border border-white/30 transition-colors hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-brand-gold"><ArrowLeft className="size-5" aria-hidden /></button>
+              {stories.map((story, index) => <button key={story.pet} type="button" aria-label={`Ver historia de ${story.name}`} aria-current={index === active ? "true" : undefined} onClick={() => goTo(index)} className="flex size-11 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-brand-gold"><span className={`h-2 rounded-full transition-all motion-reduce:transition-none ${active === index ? "w-7 bg-brand-gold" : "w-2 bg-white/40"}`} /></button>)}
+              <button type="button" onClick={() => goTo(active + 1)} aria-label="Historia siguiente" className="inline-flex size-11 items-center justify-center rounded-full border border-white/30 transition-colors hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-brand-gold"><ArrowRight className="size-5" aria-hidden /></button>
             </div>
-          </Reveal>
-        )}
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -63,7 +63,7 @@ const guias = [
     titulo: "¿Cómo saber si la calidad de vida de mi mascota sigue siendo buena?",
     parrafos: {
       intro: "Es la pregunta más difícil que nos hacen los tutores, y merece una respuesta honesta y sin culpa. Usamos la escala HHHHHM, validada internacionalmente para acompañar esta decisión:",
-      cierre: "Nadie debe tomar esta decisión solo ni a las 3 a. m. Nuestro equipo de cuidado paliativo acompaña con consultas de calidad de vida, control de síntomas y, cuando llegue el momento, una despedida digna en casa o en clínica.",
+      cierre: "Nadie debe tomar esta decisión solo ni a las 3 a. m. Nuestro equipo de cuidado paliativo acompaña con consultas de calidad de vida, control de síntomas y, cuando llegue el momento, una despedida digna en casa.",
     },
     lista: [
       "Hurt — ¿Está libre de dolor con (o a pesar de) su medicación?",
@@ -81,24 +81,23 @@ export function Recursos() {
     <section
       id="recursos"
       aria-labelledby="titulo-recursos"
-      className="py-20 md:py-24"
+      className="mt-12 border-t border-border pt-10"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-5xl">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="inline-flex items-center gap-2 rounded-full bg-brand-gold/15 px-4 py-1.5 text-sm font-semibold text-brand-navy dark:text-brand-gold">
             <BookOpen className="h-4 w-4" aria-hidden />
             Biblioteca senior
           </p>
-          <h2
+          <h3
             id="titulo-recursos"
-            className="mt-4 text-3xl font-extrabold tracking-tight text-brand-navy sm:text-4xl md:text-5xl dark:text-foreground"
+            className="mt-4 text-2xl font-extrabold tracking-tight text-brand-navy sm:text-3xl dark:text-foreground"
           >
             Guías prácticas para tutores de{" "}
             <span className="texto-marca">veteranos</span>
-          </h2>
+          </h3>
           <p className="mt-4 text-lg text-muted-foreground">
-            El conocimiento también es medicina: tres lecturas cortas escritas
-            por nuestro equipo clínico, con lo que realmente funciona en casa.
+            Tres lecturas para acompañar el cuidado cotidiano y preparar tus preguntas para la doctora.
           </p>
         </Reveal>
 

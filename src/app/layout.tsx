@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { site } from "@/lib/site";
+import { serializeStructuredData } from "@/lib/structured-data";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -14,7 +15,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Medicina Veterinaria Geriátrica en Costa Rica`,
+    default: `${site.name} | Geriatría veterinaria`,
     template: `%s | ${site.name}`,
   },
   description: site.description,
@@ -26,8 +27,8 @@ export const metadata: Metadata = {
     "geriatría felina",
     "manejo del dolor mascotas",
     "rehabilitación veterinaria",
-    "veterinaria Escazú",
-    "clínica veterinaria Costa Rica",
+    "veterinaria a domicilio Cartago",
+    "atención veterinaria a domicilio",
     "cuidado mascotas mayores",
     "medicina preventiva senior",
   ],
@@ -44,10 +45,10 @@ export const metadata: Metadata = {
     description: site.description,
     images: [
       {
-        url: "/images/hero-senior-dog.png",
-        width: 1344,
-        height: 768,
-        alt: "Veterinaria de LONGIVET examinando a un perro golden retriever senior en la clínica",
+        url: "/images/asset%20(1).png",
+        width: 1114,
+        height: 1411,
+        alt: "Medicina geriátrica veterinaria a domicilio con la Dra. Junibeth",
       },
     ],
   },
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${site.name} | Medicina Veterinaria Geriátrica`,
     description: site.description,
-    images: ["/images/hero-senior-dog.png"],
+    images: ["/images/asset%20(1).png"],
   },
   robots: {
     index: true,
@@ -69,6 +70,9 @@ export const metadata: Metadata = {
     ],
     apple: "/images/tab-logo.png",
     shortcut: "/icon.svg",
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
   category: "healthcare",
 };
@@ -85,40 +89,32 @@ export const viewport: Viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "VeterinaryCare",
-  "@id": `${site.url}/#clinica`,
+  "@id": `${site.url}/#servicio`,
   name: `${site.name} · ${site.legalName}`,
   description: site.description,
   url: site.url,
   telephone: site.phone,
-  email: site.email,
-  image: `${site.url}/images/hero-senior-dog.png`,
+  image: `${site.url}/images/asset%20(1).png`,
   priceRange: "₡₡",
   isAcceptingNewPatients: true,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: site.address.street,
-    addressLocality: site.address.locality,
-    addressRegion: site.address.region,
-    postalCode: site.address.postalCode,
-    addressCountry: site.address.country,
-  },
-  geo: { "@type": "GeoCoordinates", latitude: 9.9321, longitude: -84.1303 },
+  areaServed: [ { "@type": "AdministrativeArea", name: "Cartago, Costa Rica" }, { "@type": "AdministrativeArea", name: "San José, Costa Rica" } ],
+  sameAs: [site.social.instagram],
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       opens: "08:00",
       closes: "18:00",
     },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Saturday"], opens: "09:00", closes: "16:00" },
   ],
   availableService: [
     { "@type": "MedicalTherapy", name: "Medicina geriátrica y chequeos senior 7+" },
     { "@type": "MedicalProcedure", name: "Manejo integral del dolor y rehabilitación" },
-    { "@type": "DiagnosticProcedure", name: "Laboratorio clínico y radiología digital" },
+    { "@type": "DiagnosticProcedure", name: "Toma de muestras para laboratorio" },
     { "@type": "MedicalProcedure", name: "Odontología veterinaria" },
   ],
   medicalSpecialty: ["VeterinaryInternalMedicine", "VeterinaryPainManagement"],
-  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "412" },
 };
 
 export default function RootLayout({
@@ -139,7 +135,7 @@ export default function RootLayout({
         <Toaster />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeStructuredData(jsonLd) }}
         />
       </body>
     </html>

@@ -25,12 +25,10 @@ export function StatsStrip() {
                 Honramos sus años dorados
               </div>
               <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                Cuidar de su vejez es devolverles una vida entera de lealtad
+                Sus años dorados, con el cuidado que merecen en casa
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-white/80 sm:text-base">
-                La vejez no es una enfermedad, es una etapa que merece dignidad,
-                adaptación y amor incondicional. Acompáñanos en nuestras redes y canales directos
-                donde compartimos consejos de nutrición senior, control del dolor y calidad de vida diaria.
+                La vejez merece dignidad, adaptación y cariño. Llevamos la atención geriátrica hasta tu hogar y acompañamos a tu familia con un plan de cuidado pensado para cada paciente.
               </p>
 
               {/* Pilares de apoyo */}
@@ -72,10 +70,10 @@ export function StatsStrip() {
                     </span>
                   </div>
                   <h3 className="mt-4 text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
-                    Orientación por WhatsApp
+                    Hablemos de tu próxima visita
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-white/75">
-                    ¿Tienes dudas sobre cambios en la movilidad o hábitos de tu mascota mayor? Escríbenos directamente.
+                    Cuéntanos la edad de tu mascota y tu zona. La Dra. Junibeth coordinará contigo la atención a domicilio.
                   </p>
                 </div>
                 <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-300 group-hover:underline">
@@ -100,14 +98,14 @@ export function StatsStrip() {
                       <Instagram className="size-6 text-pink-400" aria-hidden />
                     </span>
                     <span className="rounded-full bg-pink-500/20 px-2.5 py-0.5 text-[11px] font-bold text-pink-300">
-                      @longivet.cr
+                      @paquito_zagua
                     </span>
                   </div>
                   <h3 className="mt-4 text-base font-bold text-white group-hover:text-pink-300 transition-colors">
                     Comunidad en Instagram
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-white/75">
-                    Casos clínicos reales, infografías de adaptación del hogar y recomendaciones de envejecimiento activo.
+                    Acompaña a nuestra comunidad y conoce las historias detrás de nuestros pacientes.
                   </p>
                 </div>
                 <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-extrabold text-pink-300 group-hover:underline">

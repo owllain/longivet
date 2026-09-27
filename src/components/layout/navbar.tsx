@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarCheck, ChevronRight, Menu, Phone } from "lucide-react";
+import { CalendarCheck, ChevronRight, Menu } from "lucide-react";
 
 import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -73,17 +73,17 @@ export function Navbar() {
           : "border-b border-transparent bg-transparent"
       )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 xl:px-8">
         <a
           href="#inicio"
           aria-label="LONGIVET — ir al inicio"
-          className="-m-2 inline-flex rounded-2xl p-2"
+          className="-m-2 inline-flex min-w-0 rounded-2xl p-2"
         >
           <Logo tone="dark" />
         </a>
 
         {/* Navegación desktop: píldoras con smooth-scroll (CSS scroll-behavior) */}
-        <nav aria-label="Navegación principal" className="hidden lg:block">
+        <nav aria-label="Navegación principal" className="hidden 2xl:block">
           <ul className="flex items-center gap-1">
             {navLinks.map((link) => (
               <li key={link.href}>
@@ -91,7 +91,7 @@ export function Navbar() {
                   href={link.href}
                   aria-current={active === link.href ? "true" : undefined}
                   className={cn(
-                    "inline-flex h-11 items-center rounded-full px-4 text-sm font-semibold transition-colors",
+                    "inline-flex h-11 items-center rounded-full px-3 text-sm font-semibold transition-colors",
                     active === link.href
                       ? "bg-primary/10 text-primary"
                       : "text-foreground/75 hover:bg-primary/5 hover:text-primary"
@@ -105,15 +105,9 @@ export function Navbar() {
         </nav>
 
         {/* CTA desktop + toggle de tema */}
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 2xl:flex">
           <ThemeToggle />
-          <a
-            href="#agendar"
-            className="inline-flex h-11 items-center gap-2 rounded-full bg-brand-teal-dark px-5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-brand-teal"
-          >
-            <CalendarCheck aria-hidden="true" className="size-5" />
-            Agendar cita
-          </a>
+
         </div>
 
         {/* Menú móvil (Sheet lado derecho) */}
@@ -124,7 +118,7 @@ export function Navbar() {
               aria-label="Abrir menú de navegación"
               aria-expanded={open}
               aria-controls="menu-movil"
-              className="inline-flex size-12 items-center justify-center rounded-full text-brand-navy transition-colors hover:bg-primary/10 lg:hidden"
+              className="inline-flex size-12 shrink-0 items-center justify-center rounded-full text-brand-navy dark:text-foreground transition-colors hover:bg-primary/10 2xl:hidden"
             >
               <Menu aria-hidden="true" className="size-6" />
             </button>
@@ -140,12 +134,12 @@ export function Navbar() {
               Secciones del sitio y contactos rápidos de LONGIVET.
             </SheetDescription>
 
-            <div className="flex h-16 items-center border-b border-border px-5">
+            <div className="flex min-h-20 items-center border-b border-border pl-5 pr-12">
               <SheetClose asChild>
                 <a
                   href="#inicio"
                   aria-label="LONGIVET — ir al inicio"
-                  className="-m-2 inline-flex rounded-2xl p-2"
+                  className="-m-2 inline-flex min-w-0 rounded-2xl p-2"
                 >
                   <Logo tone="dark" />
                 </a>
@@ -163,7 +157,7 @@ export function Navbar() {
                       <a
                         href={link.href}
                         aria-current={active === link.href ? "true" : undefined}
-                        className="flex h-12 items-center justify-between rounded-xl px-3 text-lg font-semibold text-foreground transition-colors hover:bg-primary/5 hover:text-primary"
+                        className="flex h-12 items-center justify-between rounded-xl px-3 text-base font-semibold text-foreground transition-colors hover:bg-primary/5 hover:text-primary"
                       >
                         {link.label}
                         <ChevronRight
@@ -186,23 +180,14 @@ export function Navbar() {
               </div>
               <SheetClose asChild>
                 <a
-                  href="#agendar"
+                  href={site.whatsappHref} target="_blank" rel="noopener noreferrer"
                   className="flex h-12 items-center justify-center gap-2 rounded-full bg-brand-teal-dark text-base font-bold text-white transition-colors hover:bg-brand-teal"
                 >
                   <CalendarCheck aria-hidden="true" className="size-5" />
                   Agendar cita
                 </a>
               </SheetClose>
-              <SheetClose asChild>
-                <a
-                  href={site.emergencyPhoneHref}
-                  aria-label="Llamar a urgencias veterinarias 24/7"
-                  className="flex h-12 items-center justify-center gap-2 rounded-full border-2 border-brand-coral/70 text-base font-bold text-brand-coral-dark transition-colors hover:border-brand-coral-dark hover:bg-brand-coral-dark hover:text-white"
-                >
-                  <Phone aria-hidden="true" className="size-5" />
-                  Llamar urgencias 24/7
-                </a>
-              </SheetClose>
+
             </div>
           </SheetContent>
         </Sheet>

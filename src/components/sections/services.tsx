@@ -13,29 +13,13 @@ import {
   Syringe,
 } from "lucide-react";
 import { Reveal } from "@/components/sections/reveal";
-import {
-  EVENTO_PRESELECCION_SERVICIO,
-  servicioReservableDeCatalogo,
-} from "@/lib/booking";
-
-/**
- * Preselecciona el servicio en el asistente de reserva (#agendar).
- * El ancla «#agendar» mantiene la semántica de enlace (navegación y teclado);
- * el scroll suave lo aporta `scroll-behavior: smooth` de globals.css.
- */
-function preseleccionarServicio(serviceId: string) {
-  window.dispatchEvent(
-    new CustomEvent(EVENTO_PRESELECCION_SERVICIO, {
-      detail: { serviceId },
-    }),
-  );
-}
+import { buildWhatsAppUrl } from "@/lib/site";
 
 const servicios = [
   {
     icon: Hourglass,
     titulo: "Geriatría y medicina senior",
-    desc: "Chequeos integrales 7+, detección temprana de enfermedades crónicas y planes de longevidad personalizados.",
+    desc: "Atención clínica y seguimiento continuo, detección temprana de enfermedades y planes de longevidad personalizados para cada paciente.",
     destacado: true,
   },
   {
@@ -56,17 +40,17 @@ const servicios = [
   {
     icon: ScanLine,
     titulo: "Diagnóstico por imagen",
-    desc: "Radiografía digital de alta resolución y ultrasonido con interpretación en la misma consulta.",
+    desc: "Valoración de la necesidad de radiografías y ultrasonidos, con coordinación de estudios según cada paciente.",
   },
   {
     icon: Microscope,
     titulo: "Laboratorio clínico",
-    desc: "Perfil geriátrico completo con resultados el mismo día: hemograma, bioquímica y función tiroidea.",
+    desc: "Toma de muestras para exámenes de laboratorio: perfil geriátrico, hemograma, bioquímica y función tiroidea, entre otros.",
   },
   {
     icon: Smile,
     titulo: "Odontología veterinaria",
-    desc: "Profilaxis y extracciones con sedación monitorizada, clave contra el dolor crónico bucal.",
+    desc: "Revisión de la salud bucal en casa y planificación de los procedimientos que requieran instalaciones especializadas.",
   },
   {
     icon: HeartHandshake,
@@ -88,17 +72,16 @@ export function Services() {
             id="titulo-servicios"
             className="mt-4 text-3xl font-extrabold tracking-tight text-brand-navy sm:text-4xl md:text-5xl dark:text-foreground"
           >
-            Servicios pensados para el <span className="texto-marca">cuerpo que envejece</span>
+            Servicios <span className="texto-marca">a domicilio</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Cada servicio integra tecnología de diagnóstico con el manejo del
-            confort: porque a mayor edad, cada detalle importa.
+            confort: porque a mayor edad, la comodidad del paciente es aún más valiosa.
           </p>
         </Reveal>
 
         <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {servicios.map((s, i) => {
-            const servicioId = servicioReservableDeCatalogo(s.titulo);
             return (
               <Reveal as="li" key={s.titulo} delay={(i % 4) * 0.07}>
                 <article
@@ -123,14 +106,9 @@ export function Services() {
                     {s.desc}
                   </p>
                   <a
-                    href="#agendar"
-                    onClick={
-                      servicioId
-                        ? () => preseleccionarServicio(servicioId)
-                        : undefined
-                    }
+                    href={buildWhatsAppUrl(`Hola Dra. Junibeth, quiero consultar por ${s.titulo.toLowerCase()} a domicilio.`)} target="_blank" rel="noopener noreferrer"
                     className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-bold text-brand-teal-dark focus-visible:outline-2 dark:text-brand-teal"
-                    aria-label={`Agendar ${s.titulo.toLowerCase()} y continuar con la reserva`}
+                    aria-label={`Agendar ${s.titulo.toLowerCase()} por WhatsApp`}
                   >
                     Agendar
                     <ArrowRight

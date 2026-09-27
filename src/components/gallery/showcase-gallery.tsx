@@ -16,6 +16,7 @@
    ───────────────────────────────────────────────────────────── */
 
 import Image from "next/image";
+import { site } from "@/lib/site";
 import {
   useCallback,
   useEffect,
@@ -27,6 +28,7 @@ import { createPortal } from "react-dom";
 import type { PanInfo, Variants } from "framer-motion";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import {
+  Instagram,
   ChevronLeft,
   ChevronRight,
   Maximize2,
@@ -77,7 +79,7 @@ export default function ShowcaseGallery() {
   // render → sin desajustes de hidratación).
   // "default": autoplay activo, salvo con prefers-reduced-motion (opt-in manual).
   const [autoplayMode, setAutoplayMode] = useState<"default" | "on" | "off">(
-    "default"
+    "off"
   );
   const [pointerPaused, setPointerPaused] = useState(false);
   const [focusPaused, setFocusPaused] = useState(false);
@@ -349,19 +351,18 @@ export default function ShowcaseGallery() {
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-teal-soft px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-accent-foreground dark:bg-accent">
               <PawPrint className="h-3.5 w-3.5" aria-hidden="true" />
-              Conócenos por dentro
+              Historias que nos acompañan
             </span>
             <h2
               id="titulo-galeria"
               className="mt-4 text-3xl font-extrabold tracking-tight text-brand-navy sm:text-4xl md:text-5xl dark:text-foreground"
             >
-              Cada rincón diseñado para la edad dorada
+              Conoce a algunos de nuestros pacientes
             </h2>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Recorre nuestra clínica: espacios cálidos, tecnología al servicio
-              del diagnóstico y un equipo que recibe a cada paciente senior como
-              a uno más de la familia.
+              Cada paciente tiene su historia. Conoce a quienes nos inspiran a cuidar su comodidad, su movilidad y su calidad de vida, también en casa.
             </p>
+            <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand-teal-dark underline underline-offset-4 dark:text-brand-teal"><Instagram className="size-4" aria-hidden />Más historias en Instagram</a>
           </div>
 
           <button
@@ -390,7 +391,7 @@ export default function ShowcaseGallery() {
           onMouseLeave={() => setPointerPaused(false)}
           onFocus={() => setFocusPaused(true)}
           onBlur={() => setFocusPaused(false)}
-          className="group/viewer relative aspect-[4/3] w-full cursor-grab select-none overflow-hidden rounded-[2rem] bg-brand-navy-deep shadow-2xl ring-1 ring-border active:cursor-grabbing sm:aspect-video"
+          className="group/viewer relative min-h-[540px] w-full cursor-grab select-none overflow-hidden rounded-[2rem] bg-brand-navy-deep shadow-2xl ring-1 ring-border active:cursor-grabbing sm:aspect-video"
         >
           {/* Diapositiva activa + salida (crossfade direccional) */}
           <AnimatePresence initial={false} custom={direction} mode="sync">
@@ -429,8 +430,8 @@ export default function ShowcaseGallery() {
                   src={slide.src}
                   alt={slide.alt}
                   fill
-                  priority={index === 0}
-                  sizes="100vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 95vw, 1200px"
+                  quality={75}
                   draggable={false}
                   onLoad={() => markLoaded(index)}
                   onError={() => markLoaded(index)}
@@ -441,7 +442,7 @@ export default function ShowcaseGallery() {
                       markLoaded(index);
                     }
                   }}
-                  className="object-cover"
+                  className="object-contain object-top"
                 />
               </motion.div>
             </motion.div>
@@ -572,6 +573,7 @@ export default function ShowcaseGallery() {
                   width={224}
                   height={144}
                   sizes="(max-width: 640px) 45vw, 112px"
+                  quality={75}
                   draggable={false}
                   className="h-full w-full object-cover"
                 />

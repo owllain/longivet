@@ -1,13 +1,10 @@
 import Image from "next/image";
-import { CalendarCheck, HeartPulse, Phone, ShieldCheck, Sparkles, Star } from "lucide-react";
+import { HeartPulse, Sparkles } from "lucide-react";
+import { WhatsappIcon } from "@/components/layout/mobile-sticky-bar";
 import { site } from "@/lib/site";
 import { Reveal } from "@/components/sections/reveal";
 
-const microStats = [
-  { value: "+12", label: "años de experiencia" },
-  { value: "8.500+", label: "pacientes atendidos" },
-  { value: "4,9", label: "estrellas (412 reseñas)", icon: true },
-];
+
 
 export function Hero() {
   return (
@@ -16,20 +13,13 @@ export function Hero() {
       aria-labelledby="titulo-inicio"
       className="relative overflow-hidden"
     >
-      {/* Fondos decorativos */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 -right-32 h-[480px] w-[480px] rounded-full bg-brand-teal-soft/80 blur-3xl dark:bg-brand-teal/10" />
-        <div className="absolute top-64 -left-40 h-[380px] w-[380px] rounded-full bg-brand-sand-deep/80 blur-3xl dark:bg-brand-navy-deep/20" />
-        <div className="patron-puntos absolute top-24 left-1/2 hidden h-72 w-72 text-brand-teal/20 lg:block" />
-      </div>
-
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pt-10 pb-16 sm:px-6 md:pt-16 md:pb-24 lg:grid-cols-2 lg:gap-8">
         {/* Columna de mensaje */}
         <div className="max-w-xl">
           <Reveal>
             <p className="inline-flex items-center gap-2 rounded-full border border-brand-teal/30 bg-brand-teal-soft px-4 py-1.5 text-sm font-semibold text-accent-foreground">
               <Sparkles className="h-4 w-4" aria-hidden />
-              {site.tagline}
+              Cuidado especializado para mascotas mayores
             </p>
           </Reveal>
 
@@ -38,82 +28,50 @@ export function Hero() {
               id="titulo-inicio"
               className="mt-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-brand-navy sm:text-5xl xl:text-6xl dark:text-foreground"
             >
-              Longevidad, salud y cariño para la{" "}
-              <span className="texto-marca">edad dorada</span> de tu mascota
+              Medicina geriátrica veterinaria <span className="texto-marca">a domicilio</span>
             </h1>
           </Reveal>
 
           <Reveal delay={0.16}>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              Medicina geriátrica basada en evidencia: detección temprana, manejo
-              experto del dolor y planes de cuidado pensados para que tus mejores
-              años juntos sean también los más cómodos.
+              Ayudamos a tu mascota mayor a vivir con más comodidad: detección temprana, manejo del dolor y cuidado personalizado en tu hogar, en Cartago y San José.
             </p>
           </Reveal>
 
-          {/* Ruta dual (Ley de Hick): planificar vs. urgencia */}
+          {/* Contacto directo y tarifas */}
           <Reveal delay={0.24}>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-wrap items-center gap-2 sm:gap-3">
               <a
-                href="#agendar"
-                className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-brand-teal-dark px-7 text-base font-bold text-white shadow-lg shadow-brand-teal/25 transition hover:bg-brand-teal focus-visible:outline-2"
+                href={site.whatsappHref} target="_blank" rel="noopener noreferrer"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand-teal-dark px-4 text-sm font-bold text-white shadow-lg shadow-brand-teal/25 transition hover:bg-brand-teal focus-visible:outline-2 sm:h-14 sm:px-7 sm:text-base"
               >
-                <CalendarCheck className="h-5 w-5" aria-hidden />
-                Agendar cita
+                <WhatsappIcon className="h-5 w-5" />
+                Agendar por WhatsApp
               </a>
-              <a
-                href={site.emergencyPhoneHref}
-                aria-label={`Llamar ahora a urgencias 24/7 al ${site.emergencyPhone}`}
-                className="inline-flex h-14 items-center justify-center gap-2 rounded-full border-2 border-brand-coral bg-card px-7 text-base font-bold text-brand-coral transition hover:bg-brand-coral hover:text-white dark:bg-transparent"
-              >
-                <Phone className="h-5 w-5" aria-hidden />
-                Urgencias 24/7
-              </a>
+              <a href="#tarifas" className="inline-flex min-h-12 items-center px-3 text-sm font-semibold text-brand-navy underline decoration-brand-teal/40 underline-offset-4 hover:decoration-current dark:text-foreground">Ver tarifas</a>
             </div>
           </Reveal>
 
-          {/* Indicadores de confianza */}
-          <Reveal delay={0.32}>
-            <dl className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-border pt-6">
-              {microStats.map((s) => (
-                <div key={s.label} className="flex items-center gap-2">
-                  <dt className="sr-only">{s.label}</dt>
-                  <dd className="flex items-center gap-1.5 text-xl font-extrabold text-brand-navy dark:text-foreground">
-                    {s.value}
-                    {s.icon && (
-                      <Star
-                        className="h-4 w-4 fill-brand-gold text-brand-gold"
-                        aria-hidden
-                      />
-                    )}
-                  </dd>
-                  <span className="text-sm text-muted-foreground">{s.label}</span>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
         </div>
 
         {/* Columna visual */}
         <Reveal delay={0.15} className="relative">
-          <div aria-hidden className="absolute -top-10 -right-10 h-40 w-40 rotate-12 rounded-[2rem] bg-brand-teal-soft/80 md:h-56 md:w-56" />
-          <div aria-hidden className="absolute -bottom-12 -left-12 h-44 w-44 -rotate-6 rounded-[2rem] bg-brand-sand-deep/80 md:h-64 md:w-64" />
 
           <div className="relative overflow-hidden rounded-[2.5rem] shadow-2xl ring-1 ring-border">
             <Image
-              src="/images/hero-senior-dog.png"
-              alt="Veterinaria de LONGIVET examinando con delicadeza a un golden retriever senior de hocico canoso en la mesa de consulta"
-              width={1344}
-              height={768}
-              priority
+              src="/images/asset (1).png"
+              alt="Dra. Junibeth González Ramírez acompañando a un paciente"
+              width={1114}
+              height={1411}
+              preload
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className="h-auto w-full object-cover"
+              className="aspect-[4/5] max-h-[580px] w-full object-cover object-top"
             />
             <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-brand-navy/25 via-transparent to-transparent" />
           </div>
 
-          {/* Tarjetas flotantes */}
-          <div className="absolute -top-4 -left-2 animate-[floaty_6s_ease-in-out_infinite] rounded-2xl bg-card/95 p-3.5 shadow-xl ring-1 ring-border backdrop-blur sm:left-6">
+          {/* Tarjeta de atención senior */}
+          <div className="absolute -top-4 left-2 max-w-[calc(100%-1rem)] rounded-2xl bg-card p-3.5 shadow-xl ring-1 ring-border sm:left-6">
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal-soft">
                 <HeartPulse className="h-5 w-5 text-brand-teal-dark" aria-hidden />
@@ -122,20 +80,7 @@ export function Hero() {
                 <p className="text-sm font-bold text-brand-navy dark:text-foreground">
                   Chequeo geriátrico 7+
                 </p>
-                <p className="text-xs text-muted-foreground">Plan personalizado por especie</p>
-              </div>
-            </div>
-          </div>
-          <div className="absolute -bottom-5 right-2 animate-[floaty_7s_ease-in-out_infinite_reverse] rounded-2xl bg-card/95 p-3.5 shadow-xl ring-1 ring-border backdrop-blur sm:right-8">
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gold/20">
-                <ShieldCheck className="h-5 w-5 text-brand-gold" aria-hidden />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-brand-navy dark:text-foreground">
-                  Dolor bajo control
-                </p>
-                <p className="text-xs text-muted-foreground">Protocolos libres de estrés</p>
+                <p className="max-w-52 text-xs text-muted-foreground">Atención y seguimiento especializado para cada paciente</p>
               </div>
             </div>
           </div>

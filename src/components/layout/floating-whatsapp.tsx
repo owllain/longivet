@@ -24,10 +24,32 @@ import { WhatsappIcon } from "@/components/layout/mobile-sticky-bar";
 
 const SCROLL_PARA_APARECER_PX = 500;
 
-export function FloatingWhatsapp() {
+export interface FloatingWhatsappProps {
+  /** Mensaje predeterminado para iniciar la conversación */
+  message?: string;
+  /** Número de WhatsApp opcional con código de país (por defecto el de LONGIVET) */
+  phoneNumber?: string;
+  /** Texto que se muestra al expandir la pastilla */
+  label?: string;
+  className?: string;
+}
+
+export function FloatingWhatsapp({
+  message,
+  phoneNumber,
+  label = "¿Consultamos tu caso?",
+  className,
+}: FloatingWhatsappProps = {}) {
   const [visible, setVisible] = useState(false);
   const [expandido, setExpandido] = useState(false);
   const rafId = useRef(0);
+
+  const whatsappHref =
+    message || phoneNumber
+      ? `https://wa.me/${phoneNumber || site.whatsappNumber}?text=${encodeURIComponent(
+          message || site.whatsappDefaultMessage
+        )}`
+      : site.whatsappHref;
 
   useEffect(() => {
     const update = () => setVisible(window.scrollY > SCROLL_PARA_APARECER_PX);
@@ -47,10 +69,10 @@ export function FloatingWhatsapp() {
     <AnimatePresence>
       {visible && (
         <motion.a
-          href={site.whatsappHref}
+          href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Escríbenos por WhatsApp (se abre en una pestaña nueva)"
+          aria-label="Escríbenos por WhatsApp a la Dra. Junibeth (se abre en una pestaña nueva)"
           initial={{ opacity: 0, y: 16, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 16, scale: 0.9 }}
@@ -62,7 +84,8 @@ export function FloatingWhatsapp() {
           className={cn(
             "fixed bottom-6 right-6 z-40 hidden h-14 items-center overflow-hidden rounded-full bg-[#25d366] text-brand-navy-deep shadow-xl ring-1 ring-brand-navy-deep/10 md:flex",
             "transition-[max-width,background-color,box-shadow] duration-300 ease-out hover:bg-[#25d366]/90 hover:shadow-2xl",
-            expandido ? "max-w-[17rem]" : "max-w-14"
+            expandido ? "max-w-[17rem]" : "max-w-14",
+            className
           )}
         >
           <WhatsappIcon className="ml-3.5 size-7 shrink-0" />
@@ -72,7 +95,7 @@ export function FloatingWhatsapp() {
               expandido ? "opacity-100 delay-150" : "opacity-0"
             )}
           >
-            Contáctanos
+            {label}
           </span>
         </motion.a>
       )}

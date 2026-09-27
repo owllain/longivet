@@ -1,230 +1,62 @@
-/* ─────────────────────────────────────────────────────────────
-   LONGIVET · Módulo «Agendar cita»
-   Constantes, validación (zod) y helpers compartidos entre
-   cliente y servidor. REGLA: este archivo NO debe importar
-   la base de datos (@/lib/db) ni ningún SDK de servidor.
-   ───────────────────────────────────────────────────────────── */
-
-import { z } from "zod";
-
-/* ── Catálogo de servicios reservables (sin iconos para evitar acoplamiento) ── */
-export const services = [
-  {
-    id: "geriatria",
-    label: "Consulta geriátrica integral",
-    desc: "Evaluación completa para mascotas 7+: movilidad, dolor, laboratorio y plan personalizado.",
-    priceHint: "Desde ₡28.000",
-  },
-  {
-    id: "preventivo",
-    label: "Chequeo preventivo y vacunación",
-    desc: "Examen físico, vacunas al día y plan de desparasitación.",
-    priceHint: "Desde ₡18.000",
-  },
-  {
-    id: "dolor",
-    label: "Manejo del dolor y movilidad",
-    desc: "Protocolos multimodales para artritis y movilidad reducida.",
-    priceHint: "Desde ₡25.000",
-  },
-  {
-    id: "odontologia",
-    label: "Odontología veterinaria",
-    desc: "Profilaxis dental con sedación monitorizada.",
-    priceHint: "Desde ₡45.000",
-  },
-  {
-    id: "diagnostico",
-    label: "Diagnóstico por imagen y laboratorio",
-    desc: "Radiografía digital y laboratorio con resultados el mismo día.",
-    priceHint: "Desde ₡20.000",
-  },
-  {
-    id: "paliativo",
-    label: "Cuidado paliativo y calidad de vida",
-    desc: "Acompañamiento compasivo en la etapa final.",
-    priceHint: "Evaluación personalizada",
-  },
+export const appointmentServices = [
+  "Consulta geriátrica", "Consulta general", "Manejo del dolor y movilidad",
+  "Vacunación", "Toma de muestras para laboratorio", "Seguimiento", "Cuidados paliativos",
 ] as const;
-
-/* ── Preselección desde el catálogo visual de Servicios (#servicios) ──
-   La sección de Servicios muestra 8 especialidades; el asistente maneja
-   6 servicios reservables. Este mapa traduce el título EXACTO del catálogo
-   (services.tsx, campo `titulo`) al id reservable.
-   ⚠️ MANTENIMIENTO: si se renombra un `titulo` en services.tsx,
-   actualizar este mapa (la búsqueda devuelve null y el enlace «Agendar»
-   de esa tarjeta dejaría de preseleccionar). */
-export type ServicioReservableId = (typeof services)[number]["id"];
-
-export const serviceMapFromCatalog: Readonly<
-  Record<string, ServicioReservableId>
-> = {
-  "Geriatría y medicina senior": "geriatria",
-  "Manejo del dolor y movilidad": "dolor",
-  "Medicina interna": "geriatria",
-  "Medicina preventiva": "preventivo",
-  "Diagnóstico por imagen": "diagnostico",
-  "Laboratorio clínico": "diagnostico",
-  "Odontología veterinaria": "odontologia",
-  "Cuidado paliativo y duelo": "paliativo",
-};
-
-/** Título del catálogo de Servicios → id reservable (null si no hay mapeo). */
-export function servicioReservableDeCatalogo(
-  tituloCatalogo: string,
-): ServicioReservableId | null {
-  return serviceMapFromCatalog[tituloCatalogo] ?? null;
-}
-
-/* ── Evento global para preseleccionar servicio en el asistente ──
-   Las tarjetas de #servicios disparan CustomEvent detail { serviceId }
-   y el asistente de reserva (booking-section.tsx) lo escucha. */
-export const EVENTO_PRESELECCION_SERVICIO =
-  "longivet:preseleccionar-servicio" as const;
-
-/* ── Profesionales disponibles ── */
-export const vets = [
-  {
-    id: "sin-preferencia",
-    label: "Sin preferencia",
-    role: "Te asignamos el primer espacio disponible",
-  },
-  {
-    id: "dra-solis",
-    label: "Dra. Mariana Solís",
-    role: "Geriatría y medicina interna",
-  },
-  {
-    id: "dr-rojas",
-    label: "Dr. Andrés Rojas",
-    role: "Cirugía y rehabilitación",
-  },
-  {
-    id: "dra-ferrara",
-    label: "Dra. Lucía Ferrara",
-    role: "Medicina felina y dolor",
-  },
-] as const;
-
-/* ── Franjas horarias (24 h, formato HH:mm) ── */
-export const morningSlots = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"] as const;
-export const afternoonSlots = ["14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"] as const;
-
-/* ── Validación de la reserva (compartida cliente/servidor) ── */
-export const appointmentSchema = z.object({
-  petName: z.string().trim().min(2, "Escribe el nombre de tu mascota (mínimo 2 letras)."),
-  species: z.enum(["perro", "gato", "otro"]),
-  breed: z.string().max(60, "La raza no puede superar los 60 caracteres.").optional().or(z.literal("")),
-  ageYears: z.number().min(0, "Edad fuera de rango.").max(30, "Edad fuera de rango.").nullable(),
-  service: z.string().min(2, "Selecciona el servicio que tu mascota necesita."),
-  preferredVet: z.string(),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Selecciona una fecha válida."),
-  timeSlot: z.string().regex(/^\d{2}:\d{2}$/, "Selecciona un horario válido."),
-  tutorName: z.string().trim().min(3, "Escribe tu nombre completo."),
-  email: z.string().email("Escribe un correo electrónico válido."),
-  phone: z
-    .string()
-    .trim()
-    .min(8, "El teléfono debe tener al menos 8 dígitos.")
-    .regex(/^[\d\s+()-]+$/, "El teléfono solo acepta números y los símbolos + ( ) -"),
-  notes: z.string().max(500, "Las notas no pueden superar los 500 caracteres.").optional().or(z.literal("")),
-  consent: z.literal(true),
-});
-
-export type AppointmentInput = z.infer<typeof appointmentSchema>;
-
-/* ── Helpers ── */
-
-/**
- * Formatea una fecha ISO «YYYY-MM-DD» como texto largo en español de Costa Rica.
- * Ej.: «Martes, 4 de marzo».
- *
- * ⚠️ HIDRATACIÓN: usa Intl/locale y por eso SOLO debe invocarse en el CLIENTE,
- * después de una interacción del usuario (resumen del paso 4 o pantalla de
- * confirmación). Nunca durante el primer render del servidor.
- *
- * Se usa timeZone «UTC» al parsear para evitar que la zona local corrija la
- * fecha un día atrás (YYYY-MM-DD se interpreta como medianoche UTC).
- */
-export function formatFechaLarga(iso: string): string {
-  const partes = iso.split("-");
-  const fecha = new Date(Date.UTC(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2])));
-  const texto = new Intl.DateTimeFormat("es-CR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    timeZone: "UTC",
-  }).format(fecha);
-  return texto.charAt(0).toUpperCase() + texto.slice(1);
-}
-
-const CODIGO_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789";
-
-/**
- * Genera un código de confirmación «LV-XXXXXX» (letras A–Z y dígitos 2–9).
- *
- * ⚠️ SERVIDOR únicamente: depende de crypto.getRandomValues. Nunca llamar
- * durante el render del cliente.
- */
-export function generarCodigo(): string {
-  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
-    const bytes = new Uint8Array(6);
-    crypto.getRandomValues(bytes);
-    let codigo = "";
-    for (const byte of bytes) {
-      codigo += CODIGO_CHARS.charAt(byte % CODIGO_CHARS.length);
-    }
-    return `LV-${codigo}`;
+export function validatePreference(date = "", time = "", now = new Date()): string {
+  if (date && (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(`${date}T12:00:00Z`)) || new Date(`${date}T12:00:00Z`).toISOString().slice(0, 10) !== date)) return "Elige una fecha válida.";
+  if (time && !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return "Elige una hora válida.";
+  const today = now.toLocaleDateString("en-CA", { timeZone: "America/Costa_Rica" });
+  if (date && date < today) return "Elige una fecha de hoy en adelante.";
+  const day = date ? new Date(`${date}T12:00:00Z`).getUTCDay() : null;
+  if (day === 0) return "Las visitas se coordinan de lunes a sábado. Elige otro día o deja la fecha sin seleccionar.";
+  if (time && date) {
+    const start = day === 6 ? "09:00" : "08:00";
+    const end = day === 6 ? "16:00" : "18:00";
+    if (time < start || time >= end) return `Elige una hora entre ${start} y antes de ${end}, o indica una preferencia alternativa.`;
+    const currentTime = now.toLocaleTimeString("en-GB", { timeZone: "America/Costa_Rica", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+    if (date === today && time <= currentTime) return "Esa hora ya pasó. Elige una hora posterior o deja el horario sin seleccionar.";
   }
-  // Fallback seguro si crypto no estuviese disponible
-  let fallback = "";
-  for (let i = 0; i < 6; i++) {
-    fallback += CODIGO_CHARS.charAt(Math.floor(Math.random() * CODIGO_CHARS.length));
-  }
-  return `LV-${fallback}`;
+  return "";
 }
-
-/**
- * Genera el texto formateado para enviar la solicitud de reserva por WhatsApp.
- */
-export function generarMensajeWhatsApp(cita: {
-  code: string;
-  petName: string;
-  species: string;
-  breed?: string | null;
-  ageYears?: number | null;
-  service: string;
-  preferredVet?: string | null;
-  date: string;
-  timeSlot: string;
-  tutorName: string;
-  email: string;
-  phone: string;
-  notes?: string | null;
-}): string {
-  const nombreServicio = services.find((s) => s.id === cita.service)?.label ?? cita.service;
-  const nombreVet = vets.find((v) => v.id === cita.preferredVet)?.label ?? "Sin preferencia";
-  const especieTexto = cita.species === "perro" ? "Perro" : cita.species === "gato" ? "Gato" : "Otra";
-  const edadTexto = cita.ageYears !== null && cita.ageYears !== undefined ? ` (${cita.ageYears} años)` : "";
-  const razaTexto = cita.breed ? ` - ${cita.breed}` : "";
-
+export function validateAppointment(data: Record<string, unknown>, now = new Date()): string {
+  const limits: Record<string, number> = { tutor: 100, pet: 100, zone: 160, speciesAge: 100, service: 100, date: 10, time: 5, alternateTime: 30, alternateDays: 30, notes: 1200, consent: 2 };
+  for (const [key, limit] of Object.entries(limits)) {
+    const value = data[key];
+    if (value === undefined) continue;
+    if (typeof value !== "string" || value.length > limit) return "Revisa los datos: alguno de los campos tiene un formato o una longitud no permitidos.";
+    // Evita controles invisibles y saltos que suplanten etiquetas del mensaje.
+    if (Array.from(value).some(char => {
+      const code = char.charCodeAt(0);
+      return (code < 32 && !(key === "notes" && [9, 10, 13].includes(code))) || code === 127 || (code >= 0x202a && code <= 0x202e) || (code >= 0x2066 && code <= 0x2069);
+    })) return "Revisa los campos: contienen caracteres de control no permitidos.";
+  }
+  for (const key of ["tutor", "pet", "zone"]) {
+    if (!(data[key] as string | undefined)?.trim()) return "Completa tu nombre, el nombre de tu mascota y la zona de visita.";
+  }
+  const choices: Record<string, readonly string[]> = {
+    service: appointmentServices,
+    alternateTime: ["Sin preferencia", "Mañana", "Tarde", "Noche"],
+    alternateDays: ["Sin preferencia", "Entresemana", "Fin de semana"],
+  };
+  for (const [key, options] of Object.entries(choices)) {
+    if (data[key] && !options.includes(data[key] as string)) return "Elige una de las opciones disponibles en el formulario.";
+  }
+  if (data.consent !== "on") return "Acepta la política de privacidad para preparar el mensaje.";
+  return validatePreference(data.date as string | undefined, data.time as string | undefined, now);
+}
+export function buildAppointmentMessage(data: Record<string, string>): string {
   return [
-    `🐾 *SOLICITUD DE CITA · LONGIVET*`,
-    `Código: *${cita.code}*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `🐶 *Mascota:* ${cita.petName} (${especieTexto}${razaTexto}${edadTexto})`,
-    `🩺 *Servicio:* ${nombreServicio}`,
-    `👩‍⚕️ *Especialista:* ${nombreVet}`,
-    `📅 *Fecha solicitada:* ${formatFechaLarga(cita.date)}`,
-    `⏰ *Horario:* ${cita.timeSlot} h`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `👤 *Tutor:* ${cita.tutorName}`,
-    `📱 *Teléfono:* ${cita.phone}`,
-    `✉️ *Correo:* ${cita.email}`,
-    cita.notes ? `📝 *Notas:* ${cita.notes}` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `¡Hola! He agendado esta cita desde el sitio web y me gustaría confirmarla. ¡Gracias!`,
-  ]
-    .filter(Boolean)
-    .join("\n");
+    "Hola Dra. Junibeth, quisiera coordinar una visita veterinaria a domicilio.",
+    `Mi nombre: ${data.tutor?.trim() || ""}`,
+    `Mascota: ${data.pet?.trim() || ""}`,
+    `Zona: ${data.zone?.trim() || ""}`,
+    data.speciesAge?.trim() && `Especie y edad: ${data.speciesAge.trim()}`,
+    `Servicio: ${data.service || "Por definir con la doctora"}`,
+    data.date && `Día preferido: ${data.date.split("-").reverse().join("/")}`,
+    data.time && `Hora preferida: ${data.time}`,
+    `Alternativa horaria: ${data.alternateTime || "Sin preferencia"}`,
+    `Días alternativos: ${data.alternateDays || "Sin preferencia"}`,
+    data.notes?.trim() && `Comentarios: ${data.notes.trim()}`,
+    "Quedo pendiente de confirmar cobertura, fecha y logística de la visita.",
+  ].filter(Boolean).join("\n");
 }

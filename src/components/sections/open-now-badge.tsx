@@ -54,7 +54,6 @@ export function OpenNowBadge({ className }: { className?: string }) {
       className={cn(
         "inline-flex h-8 max-w-full items-center gap-2 rounded-full border px-3 text-xs font-semibold text-foreground",
         modo === "abierto" && "border-brand-emerald/40 bg-brand-emerald/10",
-        modo === "guardia" && "border-brand-gold/60 bg-brand-gold/15",
         modo === "cerrado" && "border-destructive/30 bg-destructive/5",
         className,
       )}
@@ -64,7 +63,6 @@ export function OpenNowBadge({ className }: { className?: string }) {
         className={cn(
           "size-2 shrink-0 rounded-full",
           modo === "abierto" && "animate-pulse bg-brand-emerald",
-          modo === "guardia" && "bg-brand-gold",
           modo === "cerrado" && "bg-destructive/70",
         )}
       />

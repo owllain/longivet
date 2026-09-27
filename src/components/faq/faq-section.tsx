@@ -33,6 +33,7 @@ import {
   type FaqItem,
 } from "@/data/faq";
 import { cn } from "@/lib/utils";
+import { Recursos } from "@/components/sections/recursos";
 import { site } from "@/lib/site";
 
 function normalizar(texto: string): string {
@@ -56,7 +57,7 @@ const iconosCategoria: Record<string, LucideIcon> = {
 };
 
 // Top 5 preguntas esenciales más consultadas por tutores
-const indicesDestacadas = [0, 4, 5, 12, 18];
+const indicesDestacadas = [0, 1, 3, 5, 7];
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -367,7 +368,7 @@ export default function FaqSection() {
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button asChild className="rounded-full bg-brand-teal-dark px-6 font-bold text-white hover:bg-brand-teal">
-              <a href="#agendar">Agendar valoración</a>
+              <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer">Agendar valoración</a>
             </Button>
             <Button asChild variant="outline" className="rounded-full border-brand-teal/30 bg-card px-6 font-bold hover:bg-brand-teal-soft">
               <a
@@ -385,8 +386,9 @@ export default function FaqSection() {
         {/* JSON-LD Schema para Google SEO */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c") }}
         />
+        <Recursos />
       </div>
     </section>
   );

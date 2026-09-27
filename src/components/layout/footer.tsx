@@ -1,46 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type FormEvent } from "react";
 import {
   Clock,
   Coffee,
-  Facebook,
   Instagram,
-  Mail,
-  MapPin,
   Music2,
   Phone,
 } from "lucide-react";
 
 import { WhatsappIcon } from "@/components/layout/mobile-sticky-bar";
-import { OpenNowBadge } from "@/components/sections/open-now-badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { site } from "@/lib/site";
+import { navLinks, site } from "@/lib/site";
 
 const serviciosPie = [
-  { label: "Consulta geriátrica", href: "#servicios" },
-  { label: "Manejo del dolor", href: "#servicios" },
-  { label: "Odontología senior", href: "#servicios" },
+  { label: "Geriatría y medicina senior", href: "#servicios" },
+  { label: "Manejo del dolor y movilidad", href: "#servicios" },
+  { label: "Medicina interna", href: "#servicios" },
+  { label: "Medicina preventiva", href: "#servicios" },
+  { label: "Diagnóstico por imagen", href: "#servicios" },
   { label: "Laboratorio clínico", href: "#servicios" },
-  { label: "Cuidados paliativos", href: "#servicios" },
+  { label: "Odontología veterinaria", href: "#servicios" },
+  { label: "Cuidado paliativo y duelo", href: "#servicios" },
 ] as const;
 
 const explorarPie = [
-  { label: "Servicios", href: "#servicios" },
-  { label: "Galería", href: "#galeria" },
-  { label: "Programa Senior", href: "#programa-senior" },
-  { label: "Equipo médico", href: "#equipo" },
-  { label: "Preguntas frecuentes", href: "#faq" },
-  { label: "Agendar cita", href: "#agendar" },
+  ...navLinks,
+  { label: "Contacto y horarios", href: "#contacto" },
 ] as const;
 
-const distintivos = ["Fear Free", "Certificación AHTA", "+12 años de experiencia"] as const;
+const distintivos = ["Colegiada #002640", "Diplomado en Geriatría", "+6 años de experiencia"] as const;
 
 const redesSociales = [
-  { label: "Facebook de LONGIVET", href: site.social.facebook, Icon: Facebook },
   { label: "Instagram de LONGIVET", href: site.social.instagram, Icon: Instagram },
   { label: "TikTok de LONGIVET", href: site.social.tiktok, Icon: Music2 },
 ] as const;
@@ -52,18 +42,6 @@ const tituloColumna =
   "text-xs font-bold uppercase tracking-[0.16em] text-brand-gold";
 
 export function Footer() {
-  const { toast } = useToast();
-  const [email, setEmail] = useState("");
-
-  function manejarSuscripcion(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault();
-    toast({
-      title: "¡Suscripción exitosa!",
-      description: "Recibirás consejos exclusivos para el cuidado y confort de tu mascota senior.",
-    });
-    setEmail("");
-  }
-
   return (
     <footer
       role="contentinfo"
@@ -107,9 +85,6 @@ export function Footer() {
                   />
                 </div>
                 <div>
-                  <span className="inline-block rounded-full border border-brand-gold/40 bg-brand-gold/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-navy dark:text-brand-gold">
-                    Sello Certificado
-                  </span>
                   <h3 className="mt-1 text-base sm:text-lg font-extrabold tracking-tight text-brand-navy dark:text-white">
                     Dra. Junibeth González
                   </h3>
@@ -123,7 +98,7 @@ export function Footer() {
               </div>
 
               <ul
-                aria-label="Distintivos de la clínica"
+                aria-label="Distintivos de LONGIVET"
                 className="mt-3.5 flex flex-wrap gap-2 pt-3 border-t border-brand-navy/10 dark:border-white/10"
               >
                 {distintivos.map((distintivo) => (
@@ -166,12 +141,11 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Columna 4 · Contacto, Horarios y Boletín compacto */}
+          {/* Columna 4 · Contacto y horarios */}
           <div className="lg:col-span-3 space-y-4">
             <div>
               <div className="flex items-center justify-between">
                 <h3 className={tituloColumna}>Contacto & Horarios</h3>
-                <OpenNowBadge className="scale-90 border-white/30 bg-white/10 text-white" />
               </div>
               <ul className="mt-2 space-y-1.5 text-xs text-white/85">
                 <li className="flex items-center gap-2">
@@ -186,18 +160,14 @@ export function Footer() {
                     WhatsApp
                   </a>
                 </li>
-                <li className="flex items-center gap-2">
-                  <MapPin className="size-3.5 text-brand-gold shrink-0" aria-hidden />
-                  <span>{site.addressFull}</span>
-                </li>
                 <li className="flex items-center gap-2 text-[11px] text-white/70">
                   <Clock className="size-3.5 text-brand-gold shrink-0" aria-hidden />
-                  <span>Lun–Vie 8:00 a. m.–6:00 p. m. | Sáb 9:00 a. m.–2:00 p. m.</span>
+                  <span>Lun–Vie 8:00 a. m.–6:00 p. m. | Sáb 9:00 a. m.–4:00 p. m.</span>
                 </li>
               </ul>
             </div>
 
-            {/* Redes Sociales + Boletín horizontal compacto */}
+            {/* Redes sociales */}
             <div className="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
               <ul aria-label="Redes sociales" className="flex gap-2">
                 {redesSociales.map(({ label, href, Icon }) => (
@@ -215,26 +185,7 @@ export function Footer() {
                 ))}
               </ul>
 
-              <form onSubmit={manejarSuscripcion} className="flex gap-1.5 flex-1 min-w-[200px]">
-                <Input
-                  id="boletin-correo"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  placeholder="Boletín: tu@correo.cr"
-                  value={email}
-                  onChange={(evento) => setEmail(evento.target.value)}
-                  className="h-9 text-xs rounded-full border-white/20 bg-white/10 text-white placeholder:text-white/60"
-                />
-                <Button
-                  type="submit"
-                  size="sm"
-                  className="h-9 rounded-full bg-brand-gold px-3 text-xs font-bold text-brand-navy hover:bg-brand-gold/85 shrink-0"
-                >
-                  OK
-                </Button>
-              </form>
+
             </div>
           </div>
         </div>
@@ -245,20 +196,13 @@ export function Footer() {
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-white/70">
           {/* Copyright desplazado hacia la derecha */}
           <p className="sm:ml-8 sm:pl-4 font-medium text-white/80">
-            © 2026 {site.legalName} · Escazú, Costa Rica
+            © 2026 {site.legalName} · Atención a domicilio
           </p>
 
           <ul className="flex flex-wrap items-center gap-x-5 gap-y-1 text-xs">
             <li>
               <a
-                href="#contenido"
-                onClick={(e) => {
-                  e.preventDefault();
-                  toast({
-                    title: "Política de Privacidad",
-                    description: "En LONGIVET cuidamos tus datos y los de tu mascota con total confidencialidad y ética médica.",
-                  });
-                }}
+                href="/privacidad"
                 className="underline-offset-4 transition-colors hover:text-white hover:underline cursor-pointer"
               >
                 Política de privacidad
@@ -266,14 +210,7 @@ export function Footer() {
             </li>
             <li>
               <a
-                href="#contenido"
-                onClick={(e) => {
-                  e.preventDefault();
-                  toast({
-                    title: "Términos de Atención",
-                    description: "Servicios de consulta veterinaria programada con enfoque geriátrico y bienestar animal.",
-                  });
-                }}
+                href="/terminos"
                 className="underline-offset-4 transition-colors hover:text-white hover:underline cursor-pointer"
               >
                 Términos de atención

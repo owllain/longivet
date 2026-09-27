@@ -1,4 +1,4 @@
-import { CalendarCheck, Phone } from "lucide-react";
+import { List } from "lucide-react";
 
 import { site } from "@/lib/site";
 
@@ -20,46 +20,13 @@ export function WhatsappIcon({ className }: { className?: string }) {
   );
 }
 
-/**
- * MobileStickyBar · Barra inferior fija SOLO móvil (Ley de Fitts: zona del pulgar).
- * Tres acciones de ≥56 px de alto con safe-area para iPhones con notch.
- */
+/** Acciones móviles con una sola vía destacada para agendar. */
 export function MobileStickyBar() {
   return (
-    <nav
-      aria-label="Acciones rápidas"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur-lg md:hidden"
-    >
-      <div className="mx-auto grid max-w-7xl grid-cols-3 pb-[env(safe-area-inset-bottom)]">
-        <a
-          href={site.phoneHref}
-          aria-label="Llamar a LONGIVET"
-          className="flex min-h-14 flex-col items-center justify-center gap-1 px-1 text-brand-navy transition-colors hover:bg-primary/5"
-        >
-          <Phone aria-hidden="true" className="size-5" />
-          <span className="text-[11px] font-semibold leading-none">Llamar</span>
-        </a>
-
-        <a
-          href={site.whatsappHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Escribir por WhatsApp"
-          className="flex min-h-14 flex-col items-center justify-center gap-1 px-1 text-foreground transition-colors hover:bg-brand-emerald/5"
-        >
-          <WhatsappIcon className="size-5 text-brand-emerald" />
-          <span className="text-[11px] font-semibold leading-none">WhatsApp</span>
-        </a>
-
-        {/* Acción primaria resaltada: pastilla full-height en teal */}
-        <a
-          href="#agendar"
-          aria-label="Agendar una cita"
-          className="m-1.5 flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl bg-brand-teal-dark px-1 text-white shadow-sm transition-colors hover:bg-brand-teal"
-        >
-          <CalendarCheck aria-hidden="true" className="size-5" />
-          <span className="text-[11px] font-bold leading-none">Agendar</span>
-        </a>
+    <nav aria-label="Acciones rápidas" className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur-lg md:hidden">
+      <div className="mx-auto flex items-center gap-2 px-3 pt-2 pb-[max(.5rem,env(safe-area-inset-bottom))]">
+        <a href="#tarifas" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold text-foreground"><List className="size-4" aria-hidden />Tarifas</a>
+        <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-brand-teal-dark px-3 py-2 text-center text-sm font-bold text-white"><WhatsappIcon className="size-5 shrink-0" />Agendar por WhatsApp</a>
       </div>
     </nav>
   );
