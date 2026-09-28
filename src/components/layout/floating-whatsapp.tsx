@@ -1,7 +1,7 @@
 "use client";
 
 /* ─────────────────────────────────────────────────────────────
-   LONGIVET · Botón flotante de WhatsApp (SOLO escritorio)
+    LONGEVET · Botón flotante de WhatsApp (SOLO escritorio)
    - En móvil no se muestra: MobileStickyBar ya ofrece WhatsApp.
    - Aparece tras 500 px de scroll (listener pasivo + rAF).
    - Pastilla expandible al hover/foco: «¿Consultamos tu caso?»
@@ -27,7 +27,7 @@ const SCROLL_PARA_APARECER_PX = 500;
 export interface FloatingWhatsappProps {
   /** Mensaje predeterminado para iniciar la conversación */
   message?: string;
-  /** Número de WhatsApp opcional con código de país (por defecto el de LONGIVET) */
+  /** Número de WhatsApp opcional con código de país (por defecto el de LONGEVET) */
   phoneNumber?: string;
   /** Texto que se muestra al expandir la pastilla */
   label?: string;

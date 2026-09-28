@@ -1,6 +1,6 @@
-# LONGIVET · Servicios Veterinarios (Especialidad en Geriatría)
+# LONGEVET · Servicios Veterinarios (Especialidad en Geriatría)
 
-Sitio web oficial y sistema de reservas WhatsApp-First para **LONGIVET - Hospital & Servicios Veterinarios**.
+Sitio web oficial y sistema de reservas WhatsApp-First para **LONGEVET - Hospital & Servicios Veterinarios**.
 
 ## 🛠️ Stack Tecnológico
 
@@ -23,7 +23,7 @@ Sitio web oficial y sistema de reservas WhatsApp-First para **LONGIVET - Hospita
 1. El tutor completa los 4 pasos del asistente (Mascota → Servicio → Horario → Datos).
 2. Se genera un código único de confirmación (ej. `LV-DRKVOC`) y se guarda en el navegador del cliente.
 3. Se arma automáticamente un mensaje estructurado con todos los datos clínicos y de contacto.
-4. Se abre **WhatsApp** con el mensaje listo para enviar al equipo de LONGIVET.
+4. Se abre **WhatsApp** con el mensaje listo para enviar al equipo de LONGEVET.
 5. La clínica confirma la cita y coordina detalles directamente con el tutor.
 6. El tutor puede consultar o gestionar la cancelación de su cita directamente desde el sitio con su código o por WhatsApp.
 

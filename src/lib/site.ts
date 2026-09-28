@@ -1,11 +1,11 @@
 const whatsappNumber = "50671399239";
 const whatsappDefaultMessage = "Hola Dra. Junibeth, quiero agendar una consulta veterinaria a domicilio en Cartago y San José para mi mascota.";
 export const site = {
-  name: "LONGIVET",
-  legalName: "LONGIVET Servicios Veterinarios",
+  name: "LONGEVET",
+  legalName: "LONGEVET Servicios Veterinarios",
   tagline: "Medicina geriátrica veterinaria a domicilio",
   description: "Medicina geriátrica veterinaria a domicilio en Cartago y San José. Atención y seguimiento con la Dra. Junibeth González Ramírez, manejo del dolor y cuidado personalizado para mascotas senior.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://longivet.vercel.app",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://longevet.vercel.app",
   phone: "+506 7139 9239",
   phoneHref: "tel:+50671399239",
   whatsappNumber, whatsappDefaultMessage,

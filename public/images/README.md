@@ -1,4 +1,4 @@
-# Imágenes del sitio LONGIVET
+# Imágenes del sitio LONGEVET
 
 Estas imágenes son **placeholders generados con IA** para que el sitio se vea
 completo durante el desarrollo.

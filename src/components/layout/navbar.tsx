@@ -76,7 +76,7 @@ export function Navbar() {
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 xl:px-8">
         <a
           href="#inicio"
-          aria-label="LONGIVET — ir al inicio"
+          aria-label="LONGEVET — ir al inicio"
           className="-m-2 inline-flex min-w-0 rounded-2xl p-2"
         >
           <Logo tone="dark" />
@@ -132,14 +132,14 @@ export function Navbar() {
           >
             <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
             <SheetDescription className="sr-only">
-              Secciones del sitio y contactos rápidos de LONGIVET.
+              Secciones del sitio y contactos rápidos de LONGEVET.
             </SheetDescription>
 
             <div className="flex min-h-20 shrink-0 items-center border-b border-border pl-5 pr-12">
               <SheetClose asChild>
                 <a
                   href="#inicio"
-                  aria-label="LONGIVET — ir al inicio"
+                  aria-label="LONGEVET — ir al inicio"
                   className="-m-2 inline-flex min-w-0 rounded-2xl p-2"
                 >
                   <Logo tone="dark" />

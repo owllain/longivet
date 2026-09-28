@@ -1,7 +1,7 @@
 "use client";
 
 /* ─────────────────────────────────────────────────────────────
-   LONGIVET · Badge «Abierto ahora / Cerrado» en vivo
+    LONGEVET · Badge «Abierto ahora / Cerrado» en vivo
    ─────────────────────────────────────────────────────────────
    Hidratación segura: el render inicial (servidor y primer frame del
    cliente) es un esqueleto neutro; el estado real se calcula SOLO en

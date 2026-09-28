@@ -31,8 +31,8 @@ const explorarPie = [
 const distintivos = ["Colegiada #002640", "Diplomado en Geriatría", "+6 años de experiencia"] as const;
 
 const redesSociales = [
-  { label: "Instagram de LONGIVET", href: site.social.instagram, Icon: Instagram },
-  { label: "TikTok de LONGIVET", href: site.social.tiktok, Icon: Music2 },
+  { label: "Instagram de LONGEVET", href: site.social.instagram, Icon: Instagram },
+  { label: "TikTok de LONGEVET", href: site.social.tiktok, Icon: Music2 },
 ] as const;
 
 const enlacePie =
@@ -98,7 +98,7 @@ export function Footer() {
               </div>
 
               <ul
-                aria-label="Distintivos de LONGIVET"
+                aria-label="Distintivos de LONGEVET"
                 className="mt-3.5 flex flex-wrap gap-2 pt-3 border-t border-brand-navy/10 dark:border-white/10"
               >
                 {distintivos.map((distintivo) => (
