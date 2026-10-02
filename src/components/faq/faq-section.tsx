@@ -2,11 +2,19 @@
 
 import { useMemo, useRef, useState } from "react";
 import { ChevronDown, MessageCircle } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { faqCategories, faqItems } from "@/data/faq";
-import { Recursos } from "@/components/sections/recursos";
 import { buildWhatsAppUrl, site } from "@/lib/site";
 import { serializeStructuredData } from "@/lib/structured-data";
+
+const Recursos = dynamic(() => import("@/components/sections/recursos").then(m => m.Recursos), {
+  loading: () => <p className="p-4 text-center text-sm text-muted-foreground">Cargando guías...</p>
+});
+
+const RecursosDescargables = dynamic(() => import("@/components/sections/recursos-descargables").then(m => m.RecursosDescargables), {
+  loading: () => <p className="p-4 text-center text-sm text-muted-foreground">Cargando recursos...</p>
+});
 
 const featured = [0, 1, 3, 5, 7];
 const normalize = (text: string) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -52,10 +60,17 @@ export default function FaqSection() {
             {results.length === 0 && <div className="rounded-2xl border bg-card p-6"><p>No encontramos una pregunta con esos filtros.</p><button type="button" onClick={() => { setQuery(""); setCategory(""); searchRef.current?.focus(); }} className="mt-2 inline-flex min-h-11 items-center font-semibold underline">Limpiar filtros</button></div>}
           </div>
           <p className="mt-6 text-sm text-muted-foreground">¿Te queda alguna duda? <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center font-bold text-brand-teal-dark underline underline-offset-4 dark:text-brand-teal">Escríbele a la Dra. Junibeth</a></p>
-          <details className="mt-5 rounded-2xl border bg-card p-5">
-            <summary className="min-h-11 cursor-pointer content-center font-bold">Biblioteca senior: guías para cuidar en casa</summary>
-            <Recursos />
-          </details>
+          
+          <div className="mt-8 space-y-4">
+            <details className="rounded-2xl border bg-card p-5">
+              <summary className="min-h-11 cursor-pointer content-center font-bold">Recursos descargables (PDFs)</summary>
+              <RecursosDescargables />
+            </details>
+            <details className="rounded-2xl border bg-card p-5">
+              <summary className="min-h-11 cursor-pointer content-center font-bold">Biblioteca senior: guías para cuidar en casa</summary>
+              <Recursos />
+            </details>
+          </div>
         </div>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeStructuredData(schema) }} />
       </div>
